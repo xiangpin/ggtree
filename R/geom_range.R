@@ -18,8 +18,7 @@ geom_range <- function(range, center = "auto", ...) {
 }
 
 
-geom_range_internal <- function(range, center, mapping=NULL, ...) {
-    position = "identity"
+geom_range_internal <- function(range, center, mapping=NULL, position = "identity", ...) {
     show.legend = NA
     na.rm = TRUE
     inherit.aes = FALSE
