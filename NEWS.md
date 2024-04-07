@@ -28,6 +28,11 @@
   - <https://github.com/thomasp85/ggraph/commit/14de66f1225336179b4598cb42a4beda95682211>
 
 -->
+
+# ggtree 3.11.1.001
+
++ expose 'position'  parameter for `geom_range()` (2024-04-07, Sun, #611)
+
 # ggtree 3.11.1
 
 + copy `rect_to_poly()` from ggplot2 to make it compatible with ggplot2 3.5.0 (2024-02-13, Tue)
