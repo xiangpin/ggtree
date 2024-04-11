@@ -29,7 +29,7 @@
 
 -->
 
-# ggtree 3.11.1.001
+# ggtree 3.11.2
 
 + expose 'position'  parameter for `geom_range()` (2024-04-07, Sun, #611)
 
