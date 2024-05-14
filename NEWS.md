@@ -1,6 +1,3 @@
-# ggtree 3.12.0
-
-+ Bioconductor RELEASE_3_19 (2024-05-14, 周二)
 
 
 
@@ -32,6 +29,11 @@
   - <https://github.com/thomasp85/ggraph/commit/14de66f1225336179b4598cb42a4beda95682211>
 
 -->
+
+# ggtree 3.12.0
+
++ Bioconductor RELEASE_3_19 (2024-05-14, Tue)
+
 
 # ggtree 3.11.2
 
