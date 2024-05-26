@@ -315,7 +315,7 @@ getTreeArcAngles <- function(df, origin_id, subtree) {
     ## Initialise angle from origin node to parent node.
     ## If subtree_root_id is child of origin_id
     ## if (subtree_root_id %in% getChild.df(df, origin_id)) {
-    if (subtree_root_id %in% tidytree:::child.tbl_tree(df, origin_id)$node) {
+    if (subtree_root_id %in% .child.tbl_tree(df, origin_id)$node) {
         ## get angle from original node to parent of subtree.
         theta_left <- getNodeAngle.vector(x_origin, y_origin, df_x[subtree_root_id], df_y[subtree_root_id])
         theta_right <- theta_left
@@ -323,7 +323,7 @@ getTreeArcAngles <- function(df, origin_id, subtree) {
         ## Special case.
         ## get angle from parent of subtree to children
         ## children_ids <- getChild.df(df, subtree_root_id)
-        children_ids <- tidytree:::child.tbl_tree(df, subtree_root_id)$node
+        children_ids <- .child.tbl_tree(df, subtree_root_id)$node
         if(length(children_ids) == 2){
             ## get angles from parent to it's two children.
             theta1 <- getNodeAngle.vector(x_origin, y_origin, df_x[children_ids[1]], df_y[children_ids[1]])
@@ -378,7 +378,7 @@ getTreeArcAngles <- function(df, origin_id, subtree) {
     # Get angle from origin node to parent node.
     theta_parent <- getNodeAngle.vector(x_origin, y_origin, df_x[parent_id], df_y[parent_id])
       ## children_ids <- getChild.df(df, parent_id)
-      children_ids <- tidytree:::child.tbl_tree(df, parent_id)$node
+      children_ids <- .child.tbl_tree(df, parent_id)$node
     # Skip if child is parent node of subtree.
     children_ids = children_ids[children_ids != origin_id]
     for(child_id in children_ids){
@@ -546,7 +546,7 @@ getSubtree.df <- function(df, node){
   ## }
     ## subtree
     #tidytree:::offspring.tbl_tree(df, node, self_include = TRUE)$node
-    offspring.tbl_tree(df, node, self_include = TRUE)$node
+    .offspring.tbl_tree(df, node, self_include = TRUE)$node
 }
 
 ##' Get all subtrees of specified node. This includes all ancestors and relatives of node and
@@ -604,7 +604,7 @@ getSubtreeUnrooted <- function(tree, node){
 getSubtreeUnrooted.df <- function(df, node){
   # get subtree for each child node.
                                         # children_ids <- getChild.df(df, node)
-    children_ids <- child.tbl_tree(df, node)$node
+    children_ids <- .child.tbl_tree(df, node)$node
   if (length(children_ids) == 0L) return(NULL)
   # if node leaf, return nothing.
 
@@ -616,7 +616,7 @@ getSubtreeUnrooted.df <- function(df, node){
 
   # The remaining nodes that are not found in the child subtrees are the remaining subtree nodes.
   # ie, parent node and all other nodes. We don't care how they are connected, just their id.
-  parent_id <- parent.tbl_tree(df, node)$node
+  parent_id <- .parent.tbl_tree(df, node)$node
   # If node is not root.
   if ((length(parent_id) > 0) & (length(remaining_nodes) > 0)) {
     subtrees = tibble::add_row(subtrees, node = parent_id, subtree = list(remaining_nodes))

@@ -179,7 +179,7 @@ StatTreeHorizontal <- ggproto("StatTreeHorizontal", Stat,
                                           ## i.e. every node has its own line segment, even for root.
                                           ## if rootnode = FALSE, the root to itself line segment will be removed.
 
-                                          df <- dplyr::filter(df, .data$node != tidytree:::rootnode.tbl_tree(df)$node)
+                                          df <- dplyr::filter(df, .data$node != .rootnode.tbl_tree(df)$node)
                                       }
                                       if (continuous != "none") {
                                           # using ggnewscale new_scale("color") for multiple color scales
@@ -248,7 +248,7 @@ StatTreeVertical <- ggproto("StatTreeVertical", Stat,
                                     df$yend <- y
 
                                     if (!rootnode) {
-                                        df <- dplyr::filter(df, .data$node != rootnode.tbl_tree(df)$node)
+                                        df <- dplyr::filter(df, .data$node != .rootnode.tbl_tree(df)$node)
                                     }
 
                                     if (continuous != "none"){
@@ -317,7 +317,7 @@ StatTree <- ggproto("StatTree", Stat,
                             df$yend <- y
 
                             if (!rootnode) {
-                                df <- dplyr::filter(df, .data$node != rootnode.tbl_tree(df)$node)
+                                df <- dplyr::filter(df, .data$node != .rootnode.tbl_tree(df)$node)
                             }
                             if (continuous != "none") {
                                 # using ggnewscale new_scale("color") for multiple color scales

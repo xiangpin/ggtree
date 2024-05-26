@@ -420,6 +420,6 @@ taxa2node <- function(data, taxa) {
     if (is.numeric(taxa))
         return(taxa)
 
-    nodeid.tbl_tree(data, taxa)
+    .nodeid.tbl_tree(data, taxa)
 }
 

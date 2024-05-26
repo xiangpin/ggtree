@@ -428,7 +428,7 @@ get_clade_position <- function(treeview, node) {
 }
 
 get_clade_position_ <- function(data, node, reverse=FALSE) {
-    sp <- tryCatch(offspring.tbl_tree(data, node)$node, error=function(e) NULL)
+    sp <- tryCatch(.offspring.tbl_tree(data, node)$node, error=function(e) NULL)
     i <- match(node, data$node)
     if (is.null(sp)) {
         ## tip
