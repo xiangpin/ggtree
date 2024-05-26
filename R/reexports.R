@@ -1,3 +1,16 @@
+##' @importFrom ggfun %<+%
+##' @export
+##' @examples
+##' nwk <- system.file("extdata", "sample.nwk", package="treeio")
+##' tree <- read.tree(nwk)
+##' p <- ggtree(tree)
+##' dd <- data.frame(taxa=LETTERS[1:13],
+##'                    place=c(rep("GZ", 5), rep("HK", 3), rep("CZ", 4), NA),
+##'              value=round(abs(rnorm(13, mean=70, sd=10)), digits=1))
+##' row.names(dd) <- NULL
+##' p %<+% dd + geom_text(aes(color=place, label=label), hjust=-0.5)
+ggfun::`%<+%`
+
 ##' @importFrom magrittr %>%
 ##' @export
 magrittr::`%>%`

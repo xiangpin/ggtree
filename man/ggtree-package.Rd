@@ -3,7 +3,6 @@
 \docType{package}
 \name{ggtree-package}
 \alias{ggtree-package}
-\alias{_PACKAGE}
 \alias{package-ggtree}
 \title{ggtree: an R package for visualization of tree and annotation data}
 \description{
@@ -29,7 +28,7 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Lin  Li \email{williamlee2220@qq.com} [contributor]
+  \item Lin Li \email{williamlee2220@qq.com} [contributor]
   \item Bradley Jones \email{bjones@cfenet.ubc.ca} [contributor]
   \item Justin Silverman \email{jsilve24@gmail.com} [contributor]
   \item Watal M. Iwasaki \email{heavy.watal@gmail.com} [contributor]

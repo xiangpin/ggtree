@@ -31,7 +31,7 @@ Imports:
     methods,
     purrr,
     rlang,
-    ggfun (>= 0.0.9),
+    ggfun (>= 0.1.4),
     yulab.utils,
     tidyr,
     tidytree (>= 0.4.5),
