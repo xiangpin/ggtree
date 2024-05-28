@@ -3,6 +3,7 @@
 \docType{import}
 \name{reexports}
 \alias{reexports}
+\alias{\%<+\%}
 \alias{\%>\%}
 \alias{rtree}
 \alias{read.tree}
@@ -32,6 +33,16 @@
 \alias{plot_list}
 \alias{identify}
 \title{Objects exported from other packages}
+\examples{
+nwk <- system.file("extdata", "sample.nwk", package="treeio")
+tree <- read.tree(nwk)
+p <- ggtree(tree)
+dd <- data.frame(taxa=LETTERS[1:13],
+                   place=c(rep("GZ", 5), rep("HK", 3), rep("CZ", 4), NA),
+             value=round(abs(rnorm(13, mean=70, sd=10)), digits=1))
+row.names(dd) <- NULL
+p \%<+\% dd + geom_text(aes(color=place, label=label), hjust=-0.5)
+}
 \keyword{internal}
 \description{
 These objects are imported from other packages. Follow the links
@@ -44,7 +55,7 @@ below to see their documentation.
 
   \item{dplyr}{\code{\link[dplyr:compute]{collapse}}}
 
-  \item{ggfun}{\code{\link[ggfun:reexports]{identify}}}
+  \item{ggfun}{\code{\link[ggfun:attacher]{\%<+\%}}, \code{\link[ggfun:reexports]{identify}}}
 
   \item{ggplot2}{\code{\link[ggplot2]{aes}}, \code{\link[ggplot2]{fortify}}, \code{\link[ggplot2:geom_text]{geom_label}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{ggplot}}, \code{\link[ggplot2]{ggsave}}, \code{\link[ggplot2]{guide_legend}}, \code{\link[ggplot2:element]{margin}}, \code{\link[ggplot2:scale_manual]{scale_color_manual}}, \code{\link[ggplot2:scale_manual]{scale_colour_manual}}, \code{\link[ggplot2:scale_manual]{scale_fill_manual}}, \code{\link[ggplot2:scale_continuous]{scale_x_continuous}}, \code{\link[ggplot2]{theme}}, \code{\link[ggplot2:lims]{xlim}}}
 
