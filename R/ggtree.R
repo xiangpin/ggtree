@@ -17,6 +17,9 @@
 ##' @param root.position position of the root node (default = 0)
 ##' @param xlim x limits, only works for 'inward_circular' layout
 ##' @param layout.params list, the parameters of layout, when layout is a function.
+##' \code{as.graph=TRUE} and \code{layout} is a function, the coordinate will be re-calculated 
+##' as a \code{igraph} object, if \code{as.graph=FALSE} and \code{layout}, the coordinate will be
+##' re-calculated keep original object \code{phylo} or \code{treedata}. 
 ##' @param hang numeric The fraction of the tree plot height by which labels should hang 
 ##' below the rest of the plot. A negative value will cause the labels to hang down from 0. This
 ##' parameter only work with the 'dendrogram' layout for 'hclust' like class, default is 0.1.
@@ -61,7 +64,7 @@ ggtree <- function(tr,
                    branch.length  = "branch.length",
                    root.position  = 0,
                    xlim = NULL,
-                   layout.params = list(),
+                   layout.params = list(as.graph = TRUE),
                    hang = .1,
                    ...) {
 
@@ -74,7 +77,7 @@ ggtree <- function(tr,
                   }
              )
 
-    dd <- check.graph.layout(tr, trash, layout, layout.params)
+    dd <- .check.graph.layout(tr, trash, layout, layout.params)
     if (inherits(trash, "try-error") && !is.null(dd)){
         layout <- "rectangular"
     }
@@ -110,8 +113,9 @@ ggtree <- function(tr,
                 ...)
 
     if (!is.null(dd)){
-        message_wrap("The tree object will be displayed with graph layout since 
-                      layout argument was specified the graph layout function.")
+        message_wrap("The tree object will be displayed with external layout function
+                     since layout argument was specified the graph layout or other layout
+                     function.")
         p$data <- dplyr::left_join(
                     p$data %>% select(-c("x", "y")), 
                     dd, 
@@ -186,17 +190,25 @@ ggtree_references <- function() {
            )
 }
 
-check.graph.layout <- function(tr, trash, layout, layout.params){
+.check.graph.layout <- function(obj, trash, layout, layout.params){
     if (inherits(trash, "try-error")){
-        gp <- ape::as.igraph.phylo(as.phylo(tr), use.labels = FALSE)
+        if (!"as.graph" %in% names(layout.params)){
+            layout.params$as.graph <- TRUE
+        }
+        if (layout.params$as.graph){
+            obj <- ape::as.igraph.phylo(as.phylo(obj), use.labels = FALSE)
+        }
         #dd <- ggraph::create_layout(gp, layout = layout)
         if (is.function(layout)){
-            dd <- do.call(layout, c(list(gp), layout.params))
+            layout.params$as.graph <- NULL
+            dd <- do.call(layout, c(list(obj), layout.params))
             if (!inherits(dd, "matrix")){
                 if ("xy" %in% names(dd)){
                     dd <- dd$xx
                 }else if ("layout" %in% names(dd)){
                     dd <- dd$layout
+                }else if (inherits(dd, "data.frame") && nrow(dd)>2){
+                    dd <- dd[,seq(2)]
                 }else{
                     stop(trash, call. = FALSE)
                 }

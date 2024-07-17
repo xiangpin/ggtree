@@ -18,7 +18,7 @@ ggtree(
   branch.length = "branch.length",
   root.position = 0,
   xlim = NULL,
-  layout.params = list(),
+  layout.params = list(as.graph = TRUE),
   hang = 0.1,
   ...
 )
@@ -53,7 +53,10 @@ right-hand side? See \code{\link[ape:ladderize]{ape::ladderize()}} for more info
 
 \item{xlim}{x limits, only works for 'inward_circular' layout}
 
-\item{layout.params}{list, the parameters of layout, when layout is a function.}
+\item{layout.params}{list, the parameters of layout, when layout is a function.
+\code{as.graph=TRUE} and \code{layout} is a function, the coordinate will be re-calculated
+as a \code{igraph} object, if \code{as.graph=FALSE} and \code{layout}, the coordinate will be
+re-calculated keep original object \code{phylo} or \code{treedata}.}
 
 \item{hang}{numeric The fraction of the tree plot height by which labels should hang
 below the rest of the plot. A negative value will cause the labels to hang down from 0. This
