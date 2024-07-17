@@ -142,7 +142,7 @@ fortify.phylo4 <- function(model, data,
     }
 
     if (inherits(model, "hclust")) {
-        phylo <- as.phylo.hclust2(model, hang = hang)
+        phylo <- .as.phylo.hclust2(model, hang = hang)
     } else {
         phylo <- as.phylo(model)
     }
