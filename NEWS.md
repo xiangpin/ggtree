@@ -25,8 +25,9 @@
 
 -->
 
-# ggtree 3.13.0.001
+# ggtree 3.13.0.002
 
++ use `yulab.utils::yulab_msg()` for startup message (2024-07-26, Fri)
 + mv `%<+%` operator to 'ggfun' (2024-05-28, Tue)
 
 # ggtree 3.12.0
