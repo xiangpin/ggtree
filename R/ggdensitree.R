@@ -106,7 +106,7 @@ ggdensitree <- function(data=NULL, mapping=NULL, layout="slanted", tip.order='mo
 				match(x$tip.label, first.label)
 			})
 			
-			tip.2.tip <- lapply(trees, cophenetic.phylo.check.length, method=method)
+			tip.2.tip <- lapply(trees, .cophenetic.phylo.check.length, method=method)
 			tip.2.tip <- lapply(1:length(trees), function(i) {
 				tip.2.tip[[i]][tip.order[[i]], tip.order[[i]]]
 			})
@@ -149,7 +149,7 @@ ggdensitree <- function(data=NULL, mapping=NULL, layout="slanted", tip.order='mo
 }
 
 ## wrapper for cohpenetic to ensure that branch lengths exist
-cophenetic.phylo.check.length <- function(tree, method) {
+.cophenetic.phylo.check.length <- function(tree, method) {
 	if (method != 'mds_dist' || is.null(tree$edge.length))
 		tree$edge.length <- rep(1, nrow(tree$edge))
 	

@@ -245,7 +245,7 @@ get_cladelabel2_position_label <- function(data, node, offset, align, adjustRati
 
   if (align) {
     # Find max radius from tree root.
-    r <- max(getNodeEuclDistances(data, getRoot.df(data)))
+    r <- max(getNodeEuclDistances(data, .getRoot.df(data)))
   } else {
     r <- df$r
   }
@@ -295,7 +295,7 @@ get_cladelabel2_position_bar <- function(data, node, offset, align, adjustRatio)
 
   if (align) {
     # Find max radius from tree root.
-    r <- max(getNodeEuclDistances(data, getRoot.df(data)))
+    r <- max(getNodeEuclDistances(data, .getRoot.df(data)))
   } else {
     r <- df$r
   }

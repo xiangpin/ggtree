@@ -351,7 +351,7 @@ getTreeArcAngles <- function(df, origin_id, subtree) {
         }
     } else {
         ## get the real root of df tree to initialise left and right angles.
-        tree_root <- getRoot.df(df)
+        tree_root <- .getRoot.df(df)
         if( !is.na(tree_root) & is.numeric(tree_root) ){
             theta_left <- getNodeAngle.vector(x_origin, y_origin, df_x[tree_root], df_y[tree_root])
             theta_right <- theta_left
@@ -625,7 +625,7 @@ getSubtreeUnrooted.df <- function(df, node){
 }
 
 
-getRoot.df <- function(df, node){
+.getRoot.df <- function(df, node){
 
   root <- which(is.na(df$parent))
   # Check if root was found.
@@ -644,7 +644,7 @@ getRoot.df <- function(df, node){
 ##' @return list of node id's in breadth-first order.
 getNodesBreadthFirst.df <- function(df){
 
-  root <- getRoot.df(df)
+  root <- .getRoot.df(df)
   if(treeio::isTip(df, root)){
     return(root)
   }
@@ -1324,7 +1324,7 @@ edge2vec <- function(tr) {
 
 
 
-as.phylo.hclust2 <- function(x, hang=0.1, ...) {
+.as.phylo.hclust2 <- function(x, hang=0.1, ...) {
   h <- x
   tr <- ape::as.phylo(x)
   ev <- edge2vec(tr)
