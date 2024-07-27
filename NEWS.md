@@ -25,8 +25,9 @@
 
 -->
 
-# ggtree 3.13.0.002
+# ggtree 3.13.0.003
 
++ use `yulab.utils::bib_ggtree()` for citation info (2024-07-27, Sat)
 + use `yulab.utils::yulab_msg()` for startup message (2024-07-26, Fri)
 + mv `%<+%` operator to 'ggfun' (2024-05-28, Tue)
 
