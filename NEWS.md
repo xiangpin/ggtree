@@ -6,9 +6,6 @@
 + TreeAndLeaf layout: <https://www.bioconductor.org/packages/TreeAndLeaf>
 + `phylogeography`
   - <https://stackoverflow.com/questions/68668788/phylogeography-how-to-combine-phylogenetic-tree-and-geographic-map-and-create>
-+ `phylomorphospace`
-  - <https://github.com/YuLab-SMU/ggtree/issues/370>
-  - <https://github.com/wabarr/ggphylomorpho>
 + visualize support values obtained from different methods
   - <https://github.com/YuLab-SMU/ggtree/issues/451>
 + `height` parameter to `collapse()`
