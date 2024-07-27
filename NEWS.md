@@ -25,8 +25,11 @@
 
 -->
 
-# ggtree 3.13.0.003
+# ggtree 3.13.0.004
 
++ layout argument can be a function to re-calculate the coord of nodes (2024-07-27, Sat, #622)
+  - `layout.params = list(as.graph=TRUE)` (by default) for converting the tree to a graph tree (igraph object), so that graph layout can be directly applied to visualize a tree
+  - otherwise, the function can assume the input tree as a `phylo` or `treedata` object
 + use `yulab.utils::bib_ggtree()` for citation info (2024-07-27, Sat)
 + use `yulab.utils::yulab_msg()` for startup message (2024-07-26, Fri)
 + mv `%<+%` operator to 'ggfun' (2024-05-28, Tue)
