@@ -22,7 +22,7 @@
 
 -->
 
-# ggtree 3.13.0.004
+# ggtree 3.13.1
 
 + layout argument can be a function to re-calculate the coord of nodes (2024-07-27, Sat, #622)
   - `layout.params = list(as.graph=TRUE)` (by default) for converting the tree to a graph tree (igraph object), so that graph layout can be directly applied to visualize a tree

@@ -1,7 +1,7 @@
 Package: ggtree
 Type: Package
 Title: an R package for visualization of tree and annotation data
-Version: 3.13.0.004
+Version: 3.13.1
 Authors@R: c(
        person("Guangchuang", "Yu",     email = "guangchuangyu@gmail.com", role = c("aut", "cre", "cph"), 
             comment = c(ORCID = "0000-0002-6485-8781")),
@@ -32,7 +32,7 @@ Imports:
     purrr,
     rlang,
     ggfun (>= 0.1.5),
-    yulab.utils (>= 0.1.5.002),
+    yulab.utils (>= 0.1.6),
     tidyr,
     tidytree (>= 0.4.5),
     treeio (>= 1.8.0),
