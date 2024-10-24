@@ -22,6 +22,10 @@
 
 -->
 
+# ggtree 3.13.2
+
++ mv `td_filter()`, `td_unnest()` and `td_mutate()` to 'ggfun' package (2024-10-24, Thu)
+
 # ggtree 3.13.1
 
 + layout argument can be a function to re-calculate the coord of nodes (2024-07-27, Sat, #622)

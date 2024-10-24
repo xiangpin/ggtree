@@ -4,6 +4,9 @@
 \name{reexports}
 \alias{reexports}
 \alias{\%<+\%}
+\alias{td_filter}
+\alias{td_mutate}
+\alias{td_unnest}
 \alias{\%>\%}
 \alias{rtree}
 \alias{read.tree}
@@ -55,7 +58,7 @@ below to see their documentation.
 
   \item{dplyr}{\code{\link[dplyr:compute]{collapse}}}
 
-  \item{ggfun}{\code{\link[ggfun:attacher]{\%<+\%}}, \code{\link[ggfun:reexports]{identify}}}
+  \item{ggfun}{\code{\link[ggfun:attacher]{\%<+\%}}, \code{\link[ggfun:reexports]{identify}}, \code{\link[ggfun]{td_filter}}, \code{\link[ggfun]{td_mutate}}, \code{\link[ggfun]{td_unnest}}}
 
   \item{ggplot2}{\code{\link[ggplot2]{aes}}, \code{\link[ggplot2]{fortify}}, \code{\link[ggplot2:geom_text]{geom_label}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{ggplot}}, \code{\link[ggplot2]{ggsave}}, \code{\link[ggplot2]{guide_legend}}, \code{\link[ggplot2:element]{margin}}, \code{\link[ggplot2:scale_manual]{scale_color_manual}}, \code{\link[ggplot2:scale_manual]{scale_colour_manual}}, \code{\link[ggplot2:scale_manual]{scale_fill_manual}}, \code{\link[ggplot2:scale_continuous]{scale_x_continuous}}, \code{\link[ggplot2]{theme}}, \code{\link[ggplot2:lims]{xlim}}}
 

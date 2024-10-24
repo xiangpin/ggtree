@@ -1,58 +1,71 @@
-##' @importFrom ggfun %<+%
-##' @export
-##' @examples
-##' nwk <- system.file("extdata", "sample.nwk", package="treeio")
-##' tree <- read.tree(nwk)
-##' p <- ggtree(tree)
-##' dd <- data.frame(taxa=LETTERS[1:13],
-##'                    place=c(rep("GZ", 5), rep("HK", 3), rep("CZ", 4), NA),
-##'              value=round(abs(rnorm(13, mean=70, sd=10)), digits=1))
-##' row.names(dd) <- NULL
-##' p %<+% dd + geom_text(aes(color=place, label=label), hjust=-0.5)
+#' @importFrom ggfun %<+%
+#' @export
+#' @examples
+#' nwk <- system.file("extdata", "sample.nwk", package="treeio")
+#' tree <- read.tree(nwk)
+#' p <- ggtree(tree)
+#' dd <- data.frame(taxa=LETTERS[1:13],
+#'                    place=c(rep("GZ", 5), rep("HK", 3), rep("CZ", 4), NA),
+#'              value=round(abs(rnorm(13, mean=70, sd=10)), digits=1))
+#' row.names(dd) <- NULL
+#' p %<+% dd + geom_text(aes(color=place, label=label), hjust=-0.5)
 ggfun::`%<+%`
 
-##' @importFrom magrittr %>%
-##' @export
+#' @importFrom ggfun td_filter
+#' @export 
+ggfun::td_filter
+
+#' @importFrom ggfun td_mutate
+#' @export 
+ggfun::td_mutate
+
+#' @importFrom ggfun td_unnest 
+#' @export 
+ggfun::td_unnest 
+
+
+#' @importFrom magrittr %>%
+#' @export
 magrittr::`%>%`
 
-##' @importFrom ape rtree
-##' @export
+#' @importFrom ape rtree
+#' @export
 ape::rtree
 
-##' @importFrom ape read.tree
-##' @export
+#' @importFrom ape read.tree
+#' @export
 ape::read.tree
 
-##' @importFrom tidytree groupOTU
-##' @export
+#' @importFrom tidytree groupOTU
+#' @export
 tidytree::groupOTU
 
-##' @importFrom tidytree groupClade
-##' @export
+#' @importFrom tidytree groupClade
+#' @export
 tidytree::groupClade
 
-##' @importFrom tidytree nodeid
-##' @export
+#' @importFrom tidytree nodeid
+#' @export
 tidytree::nodeid
 
-##' @importFrom tidytree nodelab
-##' @export
+#' @importFrom tidytree nodelab
+#' @export
 tidytree::nodelab
 
-##' @importFrom tidytree MRCA
-##' @export
+#' @importFrom tidytree MRCA
+#' @export
 tidytree::MRCA
 
-##' @importFrom dplyr collapse
-##' @export
+#' @importFrom dplyr collapse
+#' @export
 dplyr::collapse
 
-##' @importFrom ggplot2 fortify
-##' @export
+#' @importFrom ggplot2 fortify
+#' @export
 ggplot2::fortify
 
-##' @importFrom ggplot2 ggplot
-##' @export
+#' @importFrom ggplot2 ggplot
+#' @export
 ggplot2::ggplot
 
 ##' @importFrom ggplot2 xlim
