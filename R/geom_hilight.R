@@ -306,7 +306,7 @@ geom_hilight_encircle2 <- function(data=NULL,
           )
 }
 
-check_linewidth <- getFromNamespace('check_linewidth', 'ggplot2')
+fix_linewidth <- getFromNamespace('fix_linewidth', 'ggplot2')
 snake_class <- getFromNamespace('snake_class', 'ggplot2')
 snakeize <- getFromNamespace('snakeize', 'ggplot2')
 
@@ -318,7 +318,7 @@ GeomHilightEncircle <- ggproto("GeomHilightEncircle", Geom,
                                 draw_key = draw_key_polygon,
                                 rename_size = TRUE,
                                 draw_panel = function(self, data, panel_scales, coord){
-                                    data <- check_linewidth(data, snake_class(self))
+                                    data <- fix_linewidth(data, snake_class(self))
                                     globs <- lapply(split(data, data$clade_root_node), function(i)
                                                    get_glob_encircle(i, panel_scales, coord))
                                     ggname("geom_hilight_encircle2", do.call("grobTree", globs))
