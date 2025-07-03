@@ -39,7 +39,8 @@ Imports:
     utils,
     scales,
     stats,
-    cli
+    cli,
+    plotly
 Suggests:
     emojifont,
     ggimage,
