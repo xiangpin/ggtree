@@ -1,11 +1,3 @@
-# ggtree 3.16.0
-
-+ Bioconductor RELEASE_3_21 (2025-04-17, Thu)
-
-# ggtree 3.14.0
-
-+ Bioconductor RELEASE_3_20 (2024-10-30, Wed)
-
 <!--
 
 # TODO LIST
@@ -29,6 +21,19 @@
   - <https://github.com/thomasp85/ggraph/commit/14de66f1225336179b4598cb42a4beda95682211>
 
 -->
+
+
+# ggtree 3.17.1
+
++ consistent with ggplot2 v=4.0.0 (2025-07-12, Sat, #657)
+
+# ggtree 3.16.0
+
++ Bioconductor RELEASE_3_21 (2025-04-17, Thu)
+
+# ggtree 3.14.0
+
++ Bioconductor RELEASE_3_20 (2024-10-30, Wed)
 
 # ggtree 3.13.2
 
