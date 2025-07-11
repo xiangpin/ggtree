@@ -135,7 +135,11 @@ GeomSegmentGGtree <- ggproto("GeomSegmentGGtree", GeomSegment,
                              }
                              )
 
-#' @importFrom ggplot2 is_waiver
+
+is_waiver <- function(x){
+  inherits(x, "waiver")
+}
+
 empty <- function(df){
     is.null(df) || nrow(df) == 0 || ncol(df) == 0 || is_waiver(df)
 }
