@@ -29,6 +29,19 @@ msaplot <- function(p, fasta, offset=0, width=1, color=NULL, window=NULL, bg_lin
         x <- fasta
     } else if (is(fasta, "character")) {
         x <- treeio::read.fasta(fasta)
+    } else if (is(fasta, "BStringSet")) {
+        if (requireNamespace("Biostrings", quietly = TRUE) == TRUE) {
+          temp_fasta <- tempfile("temp_fasta", fileext = ".fasta")
+          Biostrings::writeXStringSet(fasta, temp_fasta)
+          
+          x <- treeio::read.fasta(temp_fasta)
+      } else {
+          stop("object is of class 'BStringSet' but library 'Biostrings' is not installed...\n-> please install 'Biostrings' from https://bioconductor.org/packages/Biostrings for handling objects of type 'BStringSet'.")
+      }
+    } else if (is(fasta, "DNAStringSet")) {
+        x <- ape::as.DNAbin(fasta)
+    } else if (is(fasta, "AAStringSet")) {
+        x <- ape::as.AAbin(fasta)
     } else {
         x <- NULL
     }
