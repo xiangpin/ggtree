@@ -3,7 +3,7 @@
 ##'
 ##' @title msaplot
 ##' @param p tree view
-##' @param fasta fasta file that contains multiple sequence alignment information
+##' @param fasta fasta file that contains multiple sequence alignment information, or XStringSet object. see also the 'seqmagick' package for more file types. 
 ##' @param offset set the offset of MSA to tree
 ##' @param width total width of alignment, compare to width of tree, defaults to 1,
 ##' which means they are of the same length

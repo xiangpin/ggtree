@@ -22,6 +22,9 @@
 
 -->
 
+# ggtree 3.17.1.001
+
++ Added support for XStringSet in msaplot (2027-07-13, Sun, #631)
 
 # ggtree 3.17.1
 

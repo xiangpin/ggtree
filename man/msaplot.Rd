@@ -18,7 +18,7 @@ msaplot(
 \arguments{
 \item{p}{tree view}
 
-\item{fasta}{fasta file that contains multiple sequence alignment information}
+\item{fasta}{fasta file that contains multiple sequence alignment information, or XStringSet object. see also the 'seqmagick' package for more file types.}
 
 \item{offset}{set the offset of MSA to tree}
 
