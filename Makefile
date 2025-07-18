@@ -4,7 +4,7 @@ PKGSRC  := $(shell basename `pwd`)
 BIOCVER := RELEASE_3_21
 
 
-all: rd check clean
+all: rd build check clean
 
 for-release: rd check-dontrun clean readme
 
