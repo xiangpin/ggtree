@@ -31,6 +31,7 @@
 #' For more detailed demonstration, please refer to chapter 5.2.2 of 
 #' *Data Integration, Manipulation and Visualization of Phylogenetic Trees*
 #' <http://yulab-smu.top/treedata-book/index.html> by Guangchuang Yu.
+#' @importFrom ggiraph GeomInteractiveRect
 geom_balance <- function(node, fill="steelblue", color='white', alpha=.5, extend=0, extendto=NULL) {
 
   data = NULL
@@ -47,7 +48,7 @@ geom_balance <- function(node, fill="steelblue", color='white', alpha=.5, extend
     stat=StatBalance,
     data = data,
     mapping = mapping,
-    geom = GeomRect,
+    geom = GeomInteractiveRect,
     position = position,
     show.legend=show.legend,
     inherit.aes = inherit.aes,

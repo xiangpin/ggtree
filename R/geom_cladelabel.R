@@ -61,7 +61,7 @@ geom_cladelabel <- function(node, label,
               class = 'cladelabel')
 }
 
-
+#' @importFrom ggiraph GeomInteractiveText GeomInteractiveLabel
 geom_cladelabel_rectangular <- function(node, label,
                             offset      = 0,
                             offset.text = 0,
@@ -113,7 +113,7 @@ geom_cladelabel_rectangular <- function(node, label,
             ## no fill parameter
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveText, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm, parse=parse, 
                                         horizontal=horizontal, ...)
@@ -121,7 +121,7 @@ geom_cladelabel_rectangular <- function(node, label,
         } else {
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, fill=fill,family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveLabel, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm,
                                         parse = parse,  horizontal=horizontal, ...)
@@ -137,7 +137,7 @@ geom_cladelabel_rectangular <- function(node, label,
             ## no fill parameter
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, color=labelcolor, family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveText, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm, parse=parse, horizontal=horizontal, ...)
 
@@ -145,7 +145,7 @@ geom_cladelabel_rectangular <- function(node, label,
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, color=labelcolor,
                                         fill=fill,family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveLabel, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm,
                                         parse = parse, horizontal=horizontal, ...)

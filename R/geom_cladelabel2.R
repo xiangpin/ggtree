@@ -140,7 +140,7 @@ geom_cladelabel2 <- function(node, label, offset=0, offset.text=0, offset.bar=0,
 
 # Display label at middle angle of clade subtree arc.
 stat_cladeText2 <- function(mapping=NULL, data=NULL,
-                            geom="text", position="identity",
+                            geom=GeomInteractiveText, position="identity",
                             node, label, offset, align, angle, 
                             horizontal, ...,
                             show.legend=NA, inherit.aes=FALSE,

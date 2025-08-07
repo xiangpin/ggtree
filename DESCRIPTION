@@ -39,7 +39,8 @@ Imports:
     utils,
     scales,
     stats,
-    cli
+    cli,
+    ggiraph
 Suggests:
     emojifont,
     ggimage,
@@ -52,7 +53,8 @@ Suggests:
     testthat,
     tibble,
     glue,
-    Biostrings
+    Biostrings,
+    iggtree
 VignetteBuilder: knitr
 ByteCompile: true
 Encoding: UTF-8

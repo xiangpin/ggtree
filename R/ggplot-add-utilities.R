@@ -43,7 +43,8 @@ choose_hilight_layer <- function(object, type){
             object$mapping <- default_aes1
         }
         params <- c(list(data=object$data, mapping=object$mapping), object$params)
-        ly <- do.call("geom_hilight_encircle2", params)
+        geom_hilight_encircle2_interactive <- getFromNamespace("geom_hilight_encircle2_interactive", "iggtree")
+        ly <- do.call("geom_hilight_encircle2_interactive", params)
     }else{
         default_aes2 <- aes(xmin=!!sym("xmin"), xmax=!!sym("xmax"), 
                             ymin=!!sym("ymin"), ymax=!!sym("ymax"), 
@@ -62,7 +63,8 @@ choose_hilight_layer <- function(object, type){
             params$gradient <- FALSE
             params$roundrect <- TRUE
         }
-        ly <- do.call("geom_hilight_rect2", params)
+        geom_hilight_rect2_interactive <- getFromNamespace("geom_hilight_rect2_interactive", "iggtree")
+        ly <- do.call("geom_hilight_rect2_interactive", params)
     }
     return (ly)
 }
@@ -260,7 +262,7 @@ reset_params <- function(defaultp, inputp, type){
     setd <- defaultp[match(setd, names(defaultp))]
     newp <- c(intdi, setd)
     if (type=="bar"){
-        names(newp)[grepl("barsize",names(newp))] <- "size"
+        names(newp)[grepl("barsize",names(newp))] <- "linewidth"
         names(newp)[grepl("barcolour", names(newp))] <- "colour"
     }else if (type=="text"){
         names(newp)[grepl("fontsize", names(newp))] <- "size"
@@ -339,8 +341,10 @@ build_image_layer <- function(data, object, params){
     image_obj <- list()
     check_installed('ggimage', "for `geom_cladelab()` or `geom_striplab()` with geom='image' or geom='phylopic'.")
     label_geom <- switch(object$geom,
-                        image=get_fun_from_pkg("ggimage", "geom_image"),
-                        phylopic=get_fun_from_pkg("ggimage", "geom_phylopic")
+                        # image = geom_image_interactive,
+                        # phylopic = geom_phylopic_interactive
+                        image=get_fun_from_pkg("iggtree", "geom_image_interactive"),
+                        phylopic=get_fun_from_pkg("iggtree", "geom_phylopic_interactive")
                         )
     image_obj$data <- data
     image_default_aes <- list(image=NULL,imagesize=0.05, imagecolour=NULL, imagecolor=NULL,
@@ -361,12 +365,15 @@ build_image_layer <- function(data, object, params){
     return(image_obj)
 }
 
+IPAR_DEFAULTS <- getFromNamespace("IPAR_DEFAULTS", "ggiraph")
+
 build_text_layer <- function(data, object, params, layout){
     text_obj <- list()
     text_obj$data <- data
     if (object$geom=="shadowtext"){
         check_installed('shadowtext', "for `geom_cladelab()` or `geom_striplab()` with geom='shadowtext'.")
-        label_geom <- get_fun_from_pkg("shadowtext", "geom_shadowtext")
+        label_geom <- get_fun_from_pkg("iggtree", "geom_shadowtext_interactive")
+        #label_geom <- geom_shadowtext_interactive
     }
     text_default_aes <- list(textcolour="white", textcolor="white", textsize=3.88, 
                              fontsize=3.88, fontcolor="white", fontcolour="white", 
@@ -374,6 +381,8 @@ build_text_layer <- function(data, object, params, layout){
                              alpha=NA, family="", fontface=1, lineheight=1.2, inherit.aes=FALSE,
                              nudge_x=0, nudge_y=0, check_overlap=FALSE, show.legend=NA, na.rm=FALSE,
                              stat="identity", position="identity")
+    text_default_aes <- c(text_default_aes, IPAR_DEFAULTS)
+
     shadowtext_default_aes <- c(text_default_aes, list(bg.colour="black", bg.r=0.1))
     label_default_aes <- c(text_default_aes, list(fill="white", label.padding = unit(0.25, "lines"),
                                                   label.r = unit(0.15, "lines"), label.size = 0.25))
@@ -422,14 +431,14 @@ build_text_layer <- function(data, object, params, layout){
             text_obj1$mapping <- m1
             text_obj2$mapping <- m2
             text_obj2$hjust <- 1
-            textlayer <- list(do.call("geom_text2", text_obj1), do.call("geom_text2", text_obj2))
+            textlayer <- list(do.call("geom_text2_interactive", text_obj1), do.call("geom_text2_interactive", text_obj2))
         }else{
-            textlayer <- do.call("geom_text", text_obj)
+            textlayer <- do.call("geom_text2_interactive", text_obj)
         }
     }
     text_obj <- switch(object$geom,
                        text = textlayer, #do.call("geom_text", text_obj),
-                       label = do.call("geom_label", text_obj),
+                       label = do.call("geom_label2_interactive", text_obj),
                        shadowtext = do.call("label_geom", text_obj)
                       )
     return(text_obj)

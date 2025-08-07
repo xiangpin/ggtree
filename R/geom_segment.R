@@ -19,7 +19,7 @@ geom_aline <- function(mapping=NULL, linetype="dotted", linewidth = 1, ...) {
         dot_mapping <- modifyList(dot_mapping, mapping)
     }
 
-    geom_segment2(dot_mapping,
+    geom_segment2_interactive(dot_mapping,
                   linetype=linetype,
                   linewidth = linewidth, stat = StatTreeData, ...)
 }

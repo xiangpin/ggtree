@@ -35,7 +35,7 @@ geom_tippoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(mapping, subset_mapping)
         }
     }
-    geom_point2(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
+    geom_point2_interactive(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
 }
 
 ## angle is not supported,
@@ -94,7 +94,7 @@ geom_nodepoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(mapping, subset_mapping)               
         }
     }
-    geom_point2(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
+    geom_point2_interactive(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
 }
 
 
@@ -140,7 +140,7 @@ geom_rootpoint <- function(mapping = NULL, data = NULL,
 
 
     }
-    geom_point2(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
+    geom_point2_interactive(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
 }
 
 

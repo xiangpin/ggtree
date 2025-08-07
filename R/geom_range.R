@@ -39,7 +39,7 @@ geom_range_internal <- function(range, center, mapping=NULL, position = "identit
         stat = StatRange,
         mapping = mapping,
         data = NULL,
-        geom = GeomSegment,
+        geom = GeomInteractiveSegment,
         position = position,
         show.legend=show.legend,
         inherit.aes = inherit.aes,

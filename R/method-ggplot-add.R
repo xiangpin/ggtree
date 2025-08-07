@@ -242,6 +242,7 @@ ggplot_add.tiplab <- function(object, plot, object_name, ...) {
     ggplot_add(ly, plot, object_name, ...)
 }
 
+##' @importFrom ggiraph geom_text_interactive
 ##' @method ggplot_add tiplab_ylab
 ##' @export
 ggplot_add.tiplab_ylab <- function(object, plot, object_name, ...) {
@@ -257,7 +258,7 @@ ggplot_add.tiplab_ylab <- function(object, plot, object_name, ...) {
     df <- plot$data
     if ('label' %in% names(object$mapping)){
         if (object$geom == 'text'){
-            xx <- do.call('geom_text', list(mapping=object$mapping))
+            xx <- do.call('geom_text_interactive', list(mapping=object$mapping))
             xx$computed_mapping <- c(xx$mapping, plot$mapping[setdiff(names(plot$mapping), names(xx$mapping))])
             class(xx$computed_mapping) <- "uneval"
             if (!is.null(object$data)){
@@ -847,6 +848,6 @@ ggplot_add.taxalink <- function(object, plot, object_name, ...){
         object$mapping <- aes(x=!!sym("x"), y=!!sym("y"), xend=!!sym("xend"), yend=!!sym("yend"))
     }
     params <- c(list(data=object$data, mapping=object$mapping, outward=object$outward), object$params)
-    obj <- do.call("geom_curvelink", params)
+    obj <- do.call("geom_curvelink_interactive", params)
     ggplot_add(obj, plot, object_name, ...)
 }
