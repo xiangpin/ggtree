@@ -56,7 +56,7 @@ geom_segment2 <- function(mapping = NULL, data = NULL, stat = "identity",
                          nudge_x = 0, arrow = NULL, arrow.fill = NULL,
                          ...) {
 
-    default_aes <- aes_(node=~node)
+    default_aes <- aes(node=!!sym("node"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {

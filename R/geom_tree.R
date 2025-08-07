@@ -56,9 +56,9 @@ stat_tree <- function(mapping=NULL, data=NULL, geom="segment", position="identit
                       ..., arrow=NULL, rootnode=TRUE, show.legend=NA, inherit.aes=TRUE,
                       na.rm=TRUE, check.param=TRUE, continuous="none") {
 
-    default_aes <- aes_(x=~x, y=~y,node=~node, parent=~parent)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"),node=!!sym("node"), parent=!!sym("parent"))
     if (multiPhylo) {
-        default_aes <- modifyList(default_aes, aes_(.id=~.id))
+        default_aes <- modifyList(default_aes, aes(.id=!!sym(".id")))
     }
 
     if (is.null(mapping)) {
@@ -126,7 +126,7 @@ stat_tree <- function(mapping=NULL, data=NULL, geom="segment", position="identit
               check.aes = FALSE
               )
     } else if (layout %in% c("ellipse", "roundrect")){
-        mapping <- modifyList(mapping, aes_(isTip=~isTip))
+        mapping <- modifyList(mapping, aes(isTip=!!sym("isTip")))
         layer(stat=StatTreeEllipse,
               data=data,
               mapping=mapping,

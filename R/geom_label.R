@@ -59,7 +59,7 @@ geom_label2 <- function(mapping = NULL, data = NULL,
         position <- position_nudge(nudge_x, nudge_y)
     }
 
-    default_aes <- aes_() #node=~node)
+    default_aes <- aes() #node=~node)
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {

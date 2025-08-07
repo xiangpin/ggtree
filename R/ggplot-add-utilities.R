@@ -36,20 +36,22 @@ check_reverse <- function(data){
 
 choose_hilight_layer <- function(object, type){
     if (type=="encircle"){
+        default_aes1 <- aes(x=!!sym("x"), y=!!sym("y"), clade_root_node=!!sym("clade_root_node"))
         if (!is.null(object$mapping)){
-            object$mapping <- modifyList(object$mapping, aes_(x=~x, y=~y, clade_root_node=~clade_root_node))
+            object$mapping <- modifyList(object$mapping, default_aes1)
         }else{
-            object$mapping <- aes_(x=~x, y=~y, clade_root_node=~clade_root_node)
+            object$mapping <- default_aes1
         }
         params <- c(list(data=object$data, mapping=object$mapping), object$params)
         ly <- do.call("geom_hilight_encircle2", params)
     }else{
+        default_aes2 <- aes(xmin=!!sym("xmin"), xmax=!!sym("xmax"), 
+                            ymin=!!sym("ymin"), ymax=!!sym("ymax"), 
+                            clade_root_node=!!sym("clade_root_node"))
         if (!is.null(object$mapping)){
-            object$mapping <- modifyList(object$mapping, aes_(xmin=~xmin, xmax=~xmax, 
-                                                              ymin=~ymin, ymax=~ymax, 
-                                                              clade_root_node=~clade_root_node))
+            object$mapping <- modifyList(object$mapping, default_aes2)
         }else{
-            object$mapping <- aes_(xmin=~xmin, xmax=~xmax, ymin=~ymin, ymax=~ymax, clade_root_node=~clade_root_node)
+            object$mapping <- default_aes2
         }
         params <- c(list(data=object$data, mapping=object$mapping), object$params)
         if (type == "gradient"){
@@ -348,8 +350,8 @@ build_image_layer <- function(data, object, params){
     image_obj$mapping <- reset_mapping(defaultm=image_default_aes,
                                       inputm=object$mapping)
     ifelse(is.null(image_obj$mapping), 
-           image_obj$mapping <- aes_(x=~x, y=~y),
-           image_obj$mapping <- modifyList(image_obj$mapping, aes_(x=~x, y=~y)))
+           image_obj$mapping <- aes(x=!!sym("x"), y=!!sym("y")),
+           image_obj$mapping <- modifyList(image_obj$mapping, aes(x=!!sym("x"), y=!!sym("y"))))
     image_dot_params <- reset_dot_params(mapping=image_obj$mapping,
                                          defaultp=params,
                                          default_aes=image_default_aes,
@@ -381,9 +383,9 @@ build_text_layer <- function(data, object, params, layout){
                               shadowtext=reset_mapping(defaultm=shadowtext_default_aes, inputm=object$mapping)
                               )
     if(length(text_obj$mapping)==0){
-        text_obj$mapping <- aes_(x=~x, y=~y, label=~label, angle=~angle)
+        text_obj$mapping <- aes(x=!!sym("x"), y=!!sym("y"), label=!!sym("label"), angle=!!sym("angle"))
     }else{
-        text_obj$mapping <- modifyList(text_obj$mapping, aes_(x=~x, y=~y, label=~label, angle=~angle))
+        text_obj$mapping <- modifyList(text_obj$mapping, aes(x=!!sym("x"), y=!!sym("y"), label=!!sym("label"), angle=!!sym("angle")))
     }
     text_dot_params <- switch(object$geom,
                              text= reset_dot_params(mapping=text_obj$mapping,
@@ -412,8 +414,8 @@ build_text_layer <- function(data, object, params, layout){
     if (object$geom == "text"){
         if (layout %in% c("circular", "radial", "daylight", "fan", "unrooted", "ape", "inward_circular", "equal_angle") && 
             (is.null(object$params$horizontal) || object$params$horizontal)){
-            m1 <- aes_string(subset="(angle < 90 | angle > 270)", angle="angle")
-            m2 <- aes_string(subset="(angle >= 90 & angle <=270)", angle="angle+180")
+            m1 <- aes(subset=.data[["angle"]] < 90 | .data[["angle"]] > 270, angle=.data[["angle"]])
+            m2 <- aes(subset=.data[["angle"]] >= 90 & .data[["angle"]] <=270, angle=.data[["angle"]]+180)
             m1 <- modifyList(text_obj$mapping, m1)
             m2 <- modifyList(text_obj$mapping, m2)
             text_obj1 <- text_obj2 <- text_obj

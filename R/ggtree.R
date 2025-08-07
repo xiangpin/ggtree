@@ -93,12 +93,12 @@ ggtree <- function(tr,
     }
 
     if (is.null(mapping)) {
-        mapping <- aes_(~x, ~y)
+        mapping <- aes(!!sym("x"), !!sym("y"))
     } else {
-        mapping <- modifyList(aes_(~x, ~y), mapping)
+        mapping <- modifyList(aes(!!sym("x"), !!sym("y")), mapping)
     }
-
-    p <- ggplot(tr,
+    
+    p <- suppressWarnings(ggplot(tr,
                 mapping       = mapping,
                 layout        = layout,
                 mrsd          = mrsd,
@@ -109,8 +109,8 @@ ggtree <- function(tr,
                 right         = right,
                 branch.length = branch.length,
                 root.position = root.position,
-                hang          = hang,
-                ...)
+                hang          = hang
+         ))
 
     if (!is.null(dd)){
         message_wrap("The tree object will be displayed with external layout function

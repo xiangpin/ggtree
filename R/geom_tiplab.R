@@ -169,9 +169,9 @@ geom_tiplab_rectangular <- function(mapping=NULL, hjust = 0,  align = FALSE,
                             label = label, node = node)#, subset = isTip)
     }
     subset <- switch(nodelab,
-					 internal = aes_string(subset="!isTip"),
-					 external = aes_string(subset="isTip"),
-					 all = aes_string(subset=NULL)
+					 internal = aes(subset = {!isTip}),
+					 external = aes(subset = {isTip}),
+					 all = aes(subset = NULL)
 					 )
     self_mapping <- modifyList(self_mapping, subset)
     if (is.null(mapping)) {

@@ -97,11 +97,10 @@ geom_cladelabel2 <- function(node, label, offset=0, offset.text=0, offset.bar=0,
     # create arg list of stat_cladeBar2.
     args_stat_cladeBar2 <- ellipsis[names(ellipsis) %in% arg_list_geom_curve]
 
-    args_stat_cladeBar2$size        <- barsize
+    args_stat_cladeBar2$linewidth   <- barsize
     args_stat_cladeBar2$node        <- node
     args_stat_cladeBar2$offset      <- offset+offset.bar
     args_stat_cladeBar2$align       <- align
-    args_stat_cladeBar2$size        <- barsize
     args_stat_cladeBar2$mapping     <- mapping
     args_stat_cladeBar2$data        <- data
     args_stat_cladeBar2$position    <- position
@@ -147,7 +146,7 @@ stat_cladeText2 <- function(mapping=NULL, data=NULL,
                             show.legend=NA, inherit.aes=FALSE,
                             na.rm=FALSE, parse=FALSE) {
   # columns from ggplot data data.frame.
-  default_aes <- aes_(x=~x, y=~y, node=~node, parent=~parent)
+  default_aes <- aes(x=!!sym("x"), y=!!sym("y"), node=!!sym("node"), parent=!!sym("parent"))
   if (is.null(mapping)) {
     mapping <- default_aes
   } else {
@@ -181,7 +180,8 @@ stat_cladeBar2 <- function(mapping=NULL, data=NULL,
                            node, offset, align, ...,
                            show.legend=NA, inherit.aes=FALSE, na.rm=FALSE,
                            arrow=NULL, arrow.fill=NULL) {
-  default_aes <- aes_(x=~x, y=~y, node=~node, parent=~parent, xend=~x, yend=~y)
+  default_aes <- aes(x=!!sym("x"), y=!!sym("y"), node=!!sym("node"), 
+                     parent=!!sym("parent"), xend=!!sym("x"), yend=!!sym("y"))
   if (is.null(mapping)) {
     mapping <- default_aes
   } else {

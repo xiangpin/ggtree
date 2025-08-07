@@ -25,14 +25,14 @@ geom_motif <- function(mapping, data, on, label, align = 'centre', ...) {
     data$start <- data$start - adj
     data$end <- data$end - adj
     geom_gene_arrow <- get_fun_from_pkg("gggenes", "geom_gene_arrow")
-    mapping <- modifyList(mapping, aes_(y = ~y))
+    mapping <- modifyList(mapping, aes(y = !!sym("y")))
     ly_gene <- geom_gene_arrow(mapping = mapping, data = data, inherit.aes = FALSE, ...)
     if (missing(label)) {
         return(ly_gene)
     }
 
     geom_gene_label <- get_fun_from_pkg("gggenes", "geom_gene_label")
-    mapping <- modifyList(mapping, aes_string(label = label))
+    mapping <- modifyList(mapping, aes(label = !!sym("label")))
     if (align == 'center') align <- 'centre'
     ly_lab <- geom_gene_label(mapping = mapping, data = data, align = align,
                               inherit.aes = FALSE,...)

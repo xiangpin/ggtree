@@ -180,7 +180,8 @@ stat_cladeText <- function(mapping = NULL, data = NULL,
                            show.legend = NA, inherit.aes = FALSE,
                            na.rm = FALSE, parse = FALSE, horizontal=TRUE) {
 
-    default_aes <- aes_(x=~x, y=~y, node=~node, parent=~parent, angle=~angle)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), node=!!sym("node"), 
+                       parent=!!sym("parent"), angle=!!sym("angle"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -215,7 +216,8 @@ stat_cladeBar <- function(mapping=NULL, data=NULL,
                           show.legend=NA, inherit.aes=FALSE, na.rm=FALSE) {
 
 
-    default_aes <- aes_(x=~x, y=~y, node=~node, parent=~parent, xend=~x, yend=~y)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), node=!!sym("node"), 
+                       parent=!!sym("parent"), xend=!!sym("x"), yend=!!sym("y"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {

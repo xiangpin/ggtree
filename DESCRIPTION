@@ -51,7 +51,8 @@ Suggests:
     rmarkdown,
     testthat,
     tibble,
-    glue
+    glue,
+    Biostrings
 VignetteBuilder: knitr
 ByteCompile: true
 Encoding: UTF-8

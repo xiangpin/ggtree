@@ -4,15 +4,15 @@ PKGSRC  := $(shell basename `pwd`)
 BIOCVER := RELEASE_3_21
 
 
-all: rd check clean
+all: rd build check clean
 
 for-release: rd check-dontrun clean readme
 
 alldocs: rd readme
 
 rd:
-	Rscript -e 'library(methods); devtools::document()'
-# Rscript -e 'roxygen2::roxygenise(".")'
+	#Rscript -e 'library(methods); devtools::document()'
+	Rscript -e 'roxygen2::roxygenise(".")'
 
 readme:
 	Rscript -e 'rmarkdown::render("README.Rmd", encoding="UTF-8")'
@@ -22,9 +22,9 @@ sticker:
 	rm Rplots.pdf
 
 build:
-	# cd ..;\
-	# R CMD build $(PKGSRC)
-	Rscript -e 'devtools::build()'
+	cd ..;\
+	R CMD build $(PKGSRC)
+	#Rscript -e 'devtools::build()'
 
 build2:
 	cd ..;\
@@ -35,9 +35,9 @@ install:
 	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
 
 check: rd 
-	#cd ..;\
-	#Rscript -e "rcmdcheck::rcmdcheck('$(PKGNAME)_$(PKGVERS).tar.gz')"
-	Rscript -e 'devtools::check()'
+	cd ..;\
+	Rscript -e "rcmdcheck::rcmdcheck('$(PKGNAME)_$(PKGVERS).tar.gz')"
+	#Rscript -e 'devtools::check()'
 	
 check-dontrun: build
 	cd ..;\

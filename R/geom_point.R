@@ -12,6 +12,7 @@
 ##' tr<- rtree(15)
 ##' x <- ggtree(tr)
 ##' x + geom_tippoint()
+##' @importFrom rlang .data
 ##' @references
 ##' For more detailed demonstration, please refer to chapter 4.3.2 of 
 ##' *Data Integration, Manipulation and Visualization of Phylogenetic Trees*
@@ -19,7 +20,7 @@
 geom_tippoint <- function(mapping = NULL, data = NULL,
                        position = "identity", na.rm = FALSE,
                           show.legend = NA, inherit.aes = TRUE, ...) {
-    self_mapping <- aes_(node = ~node, subset = ~isTip)
+    self_mapping <- aes(node = !!sym("node"), subset = !!sym("isTip"))
     if (is.null(mapping)) {
         mapping <- self_mapping
     } else {
@@ -78,7 +79,7 @@ geom_tippoint <- function(mapping = NULL, data = NULL,
 geom_nodepoint <- function(mapping = NULL, data = NULL,
                        position = "identity", na.rm = FALSE,
                        show.legend = NA, inherit.aes = TRUE, ...) {
-    self_mapping <- aes_(node = ~node, subset = ~ (!isTip))
+    self_mapping <- aes(node = .data[["node"]], subset = !.data[["isTip"]])
     if (is.null(mapping)) {
         mapping <- self_mapping
     } else {
@@ -225,7 +226,7 @@ geom_point2 <- function(mapping = NULL, data = NULL, stat = "identity",
                        show.legend = NA, inherit.aes = TRUE, ...) {
   
 
-    default_aes <- aes_() # node=~node)
+    default_aes <- aes() # node=~node)
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
