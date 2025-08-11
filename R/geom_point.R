@@ -12,7 +12,7 @@
 ##' tr<- rtree(15)
 ##' x <- ggtree(tr)
 ##' x + geom_tippoint()
-##' @importFrom rlang .data
+##' @importFrom rlang .data sym
 ##' @references
 ##' For more detailed demonstration, please refer to chapter 4.3.2 of 
 ##' *Data Integration, Manipulation and Visualization of Phylogenetic Trees*
@@ -28,10 +28,7 @@ geom_tippoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(self_mapping, mapping)   
         } else { 
             mapping <- modifyList(self_mapping, mapping)
-            subset_mapping <- aes_string(subset = paste0(
-                                             as.expression(get_aes_var(mapping, "subset")),
-                                             '&isTip')
-                                         )
+            subset_mapping <- aes(subset = !!new_quosure(parse_expr(paste0(get_aes_var(mapping, "subset"),' &isTip'))))
             mapping <- modifyList(mapping, subset_mapping)
         }
     }
@@ -65,7 +62,6 @@ geom_tippoint <- function(mapping = NULL, data = NULL,
 ##' @title geom_nodepoint
 ##' @inheritParams geom_point2
 ##' @return node point layer
-##' @importFrom ggplot2 aes_string
 ##' @export
 ##' @author Guangchuang Yu
 ##' library(ggtree)
@@ -87,11 +83,8 @@ geom_nodepoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(self_mapping, mapping)   
         } else {
             mapping <- modifyList(self_mapping, mapping)
-            subset_mapping <- aes_string(subset = paste0(
-                                             as.expression(get_aes_var(mapping, "subset")),
-                                             '&!isTip')
-                                         )
-            mapping <- modifyList(mapping, subset_mapping)               
+            subset_mapping <- aes(subset = !!new_quosure(parse_expr(paste0(get_aes_var(mapping, "subset"),' & !isTip'))))
+            mapping <- modifyList(mapping, subset_mapping)
         }
     }
     geom_point2_interactive(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
@@ -131,11 +124,8 @@ geom_rootpoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(self_mapping, mapping)               
         } else {
             mapping <- modifyList(self_mapping, mapping)
-            subset_mapping <- aes_string(subset = paste0(
-                                             as.expression(get_aes_var(mapping, "subset")),
-                                             '&node==parent')
-                                         )
-            mapping <- modifyList(mapping, subset_mapping)   
+            subset_mapping <- aes(subset = !!new_quosure(parse_expr(paste0(get_aes_var(mapping, "subset"),' & node==parent'))))
+            mapping <- modifyList(mapping, subset_mapping)
         }
 
 

@@ -58,7 +58,8 @@ geom_text2 <- function(mapping = NULL, data = NULL,
         parse <- FALSE
         family <- "EmojiOne"
         ## label_aes <- aes_string(label=paste0("suppressMessages(emoji(", as.list(mapping)$label,"))"))
-        label_aes <- aes_string(label=paste0("suppressMessages(emoji(", get_aes_var(mapping, "label"), "))"))
+        #label_aes <- aes_string(label=paste0("suppressMessages(emoji(", get_aes_var(mapping, "label"), "))"))
+        label_aes <- aes(label = emoji(.data[[get_aes_var(mapping, "label")]]))
         ## mapping <- modifyList(mapping, aes(label=emoji(!!mapping$label))) ## ggplot2 >= 2.3.0
         mapping <- modifyList(mapping, label_aes)
     }

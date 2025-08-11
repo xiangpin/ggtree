@@ -177,19 +177,18 @@ geom_tiplab_rectangular <- function(mapping=NULL, hjust = 0,  align = FALSE,
                             label = label, node = node)#, subset = isTip)
     }
     subset <- switch(nodelab,
-					 internal = aes(subset = {!isTip}),
-					 external = aes(subset = {isTip}),
-					 all = aes(subset = NULL)
-					 )
+                     internal = aes(subset = !isTip),
+                     external = aes(subset = isTip),
+                     all = aes(subset = NULL)
+                )
     self_mapping <- modifyList(self_mapping, subset)
     if (is.null(mapping)) {
         text_mapping <- self_mapping
     } else {
         if (!is.null(mapping$subset) && nodelab != "all"){
-            newsubset <- aes_string(subset=paste0(as.expression(get_aes_var(mapping, "subset")), 
-                                                  '&', 
-                                                  as.expression(get_aes_var(subset, "subset")))
-                                    )
+            newsubset <- aes(subset=!!new_quosure(parse_expr(paste0(get_aes_var(mapping, "subset"),
+                                              '&', 
+                                              get_aes_var(subset, "subset")))))
             self_mapping <- modifyList(self_mapping, newsubset)
             mapping$subset <- NULL
         }
@@ -210,18 +209,19 @@ geom_tiplab_rectangular <- function(mapping=NULL, hjust = 0,  align = FALSE,
     imageparams <- list(mapping=text_mapping, hjust = hjust, nudge_x = offset, stat = StatTreeData)
     imageparams <- extract_params(imageparams, params, c("data", "size", "alpha", "color", "colour", "image", 
                                                          "angle", "position", "inherit.aes", "by", "show.legend",
-                                                         "image_fun", ".fun", "asp", "nudge_y", "height", "na.rm")) 
+                                                         "image_fun", ".fun", "asp", "nudge_y", "height", "na.rm", IPAR_NAMES))
+     
     labelparams <- list(mapping=text_mapping, hjust = hjust, nudge_x = offset, stat = StatTreeData)
     labelparams <- extract_params(labelparams, params, 
                                   c("data", "size", "alpha", "vjust", "color", "colour", "angle", "alpha", "family", "fontface",
                                     "lineheight", "fill", "position", "nudge_y", "show.legend", "check_overlap",
                                     "parse", "inherit.aes", "na.rm", "label.r", "label.size", "label.padding",
-                                    "bg.colour", "bg.r"))
+                                    "bg.colour", "bg.r", IPAR_NAMES))
     list(
         if (show_segment){
             lineparams <- list(mapping = segment_mapping, linetype=linetype, nudge_x = offset, linewidth = linesize, stat = StatTreeData)
             lineparams <- extract_params(lineparams, params, c("data", "color", "colour", "alpha", "show.legend", "na.rm",
-                                                               "inherit.aes", "arrow", "arrow.fill", "lineend")) 
+                                                               "inherit.aes", "arrow", "arrow.fill", "lineend", IPAR_NAMES)) 
             do.call("geom_segment2_interactive", lineparams)
         }
        ,
@@ -253,6 +253,7 @@ geom_tiplab_rectangular <- function(mapping=NULL, hjust = 0,  align = FALSE,
 ##' ggtree(tr, layout = "circular") + geom_tiplab2()
 ##' @references <https://groups.google.com/forum/#!topic/bioc-ggtree/o35PV3iHO-0>
 ##' @seealso [geom_tiplab]
+##' @importFrom rlang new_quosure parse_expr
 geom_tiplab2 <- function(mapping=NULL, hjust=0, ...) {
     params <- list(...)
     #if ("nodelab" %in% names(params) && params[["nodelab"]]){
@@ -266,15 +267,15 @@ geom_tiplab2 <- function(mapping=NULL, hjust=0, ...) {
     #}
     subset1 <- "(angle < 90 | angle > 270)"
     subset2 <- "(angle >= 90 & angle <=270)"
-    m1 <- aes_string(subset=subset1, angle="angle", node = "node")
-    m2 <- aes_string(subset=subset2, angle="angle+180", node = "node")
+    m1 <- aes(subset=!!new_quosure(parse_expr(subset1)), angle=.data[["angle"]], node = .data[["node"]])
+    m2 <- aes(subset=!!new_quosure(parse_expr(subset2)), angle=.data[["angle"]]+180, node = .data[["node"]])
 
     if (!is.null(mapping)) {
         if (!is.null(mapping$subset)) {
-            newsubset1 <- paste0(as.expression(get_aes_var(mapping, "subset")), '&', subset1)
-            newsubset2 <- paste0(as.expression(get_aes_var(mapping, "subset")), '&', subset2)
-            m1 <- aes_string(angle = "angle", node = "node", subset = newsubset1)
-            m2 <- aes_string(angle = "angle+180", node = "node", subset = newsubset2)
+            newsubset1 <- paste0(get_aes_var(mapping, "subset"), '&', subset1)
+            newsubset2 <- paste0(get_aes_var(mapping, "subset"), '&', subset2)
+            m1 <- aes(angle = .data[["angle"]], node = .data[["node"]], subset = !!new_quosure(parse_expr(newsubset1)))
+            m2 <- aes(angle = .data[["angle"]]+180, node = .data[["node"]], subset = !!new_quosure(parse_expr(newsubset2)))
         }
         m1 <- modifyList(mapping, m1)
         m2 <- modifyList(mapping, m2)

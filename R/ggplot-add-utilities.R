@@ -69,16 +69,17 @@ choose_hilight_layer <- function(object, type){
     return (ly)
 }
 
-extract_all_aes_var <- function(mapping, rmvar=c("node", "subset")){
+extract_all_aes_var <- function(mapping, rmvar=c(c("node", "subset"), IPAR_NAMES)){
     unlist(lapply(names(mapping)[!names(mapping) %in% rmvar], 
                   function(i) get_aes_var(mapping, i)))
 }
 
+#' @importFrom rlang quo
 remapping <- function(mapping, samevars){
     allvars <- extract_all_aes_var(mapping, rmvar=NULL)
     samevars <- allvars[allvars %in% samevars]
-    tmpmap <- lapply(samevars, function(i) paste0(i, ".x"))
-    tmpmap <- do.call("aes_string", tmpmap)
+    tmpmap <- lapply(samevars, function(i) quo(!!sym(paste0(i, ".x"))))
+    tmpmap <- do.call("aes", tmpmap)
     names(tmpmap) <- names(mapping)[allvars %in% samevars]
     mapping <- modifyList(mapping, tmpmap)
     return(mapping)
@@ -366,6 +367,7 @@ build_image_layer <- function(data, object, params){
 }
 
 IPAR_DEFAULTS <- getFromNamespace("IPAR_DEFAULTS", "ggiraph")
+IPAR_NAMES <- names(IPAR_DEFAULTS)
 
 build_text_layer <- function(data, object, params, layout){
     text_obj <- list()

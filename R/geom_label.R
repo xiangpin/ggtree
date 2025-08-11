@@ -68,7 +68,9 @@ geom_label2 <- function(mapping = NULL, data = NULL,
 
     if (parse == "emoji") {
         check_installed('emojifont', "for `geom_label2()` with parse = 'emoji'.")
-        label_aes <- aes_string(label=paste0("suppressMessages(emoji(", as.list(mapping)$label,"))"))
+        emoji <- get_fun_from_pkg("emojifont", "emoji")
+        #label_aes <- aes_string(label=paste0("suppressMessages(emoji(", as.list(mapping)$label,"))"))
+        label_aes <- aes(label = emoji(.data[[get_aes_var(mapping, "label")]]))
         mapping <- modifyList(mapping, label_aes)
         emoji <- get_fun_from_pkg("emojifont", "emoji")
         parse <- FALSE
