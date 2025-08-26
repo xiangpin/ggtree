@@ -50,8 +50,6 @@ geom_tree <- function(mapping=NULL, data=NULL, layout="rectangular", multiPhylo=
               layout=layout, multiPhylo=multiPhylo, continuous=continuous, ...)
 }
 
-GeomInteractiveSegmentGGtree <- getFromNamespace("GeomInteractiveSegmentGGtree", "iggtree")
-GeomInteractiveCurvelink <- getFromNamespace("GeomInteractiveCurvelink", "iggtree")
 
 #' @importFrom ggiraph GeomInteractiveSegment
 stat_tree <- function(mapping=NULL, data=NULL, geom=GeomInteractiveSegment, position="identity",

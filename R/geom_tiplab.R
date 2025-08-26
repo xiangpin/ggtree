@@ -126,11 +126,6 @@ geom_tiplab_as_ylab <- function(hjust = 0, position = "right", ...) {
               )
 }
 
-geom_text2_interactive <- getFromNamespace("geom_text2_interactive", "iggtree")
-geom_label2_interactive <- getFromNamespace("geom_label2_interactive", "iggtree")
-geom_segment2_interactive <- getFromNamespace("geom_segment2_interactive", "iggtree")
-geom_point2_interactive <- getFromNamespace("geom_point2_interactive", "iggtree")
-
 geom_tiplab_rectangular <- function(mapping=NULL, hjust = 0,  align = FALSE, 
                                     linetype = "dotted", linesize=0.5, geom="text",  
                                     offset=0, #family = "", fontface = "plain", 
@@ -154,15 +149,15 @@ geom_tiplab_rectangular <- function(mapping=NULL, hjust = 0,  align = FALSE,
         label_geom <- geom_label2_interactive
     } else if (geom == 'shadowtext') {
         check_installed("shadowtext", "for `geom_tiplab()` with geom = 'shadowtext'.")
-        label_geom <- get_fun_from_pkg("iggtree", "geom_shadowtext_interactive")
+        label_geom <- get_fun_from_pkg("shadowtext", "geom_shadowtext_interactive")
         #label_geom <- geom_shadowtext_interactive
     } else if (geom == "image") {
         check_installed('ggimage', "for `geom_tiplab()` with geom = 'image'.")
-        label_geom <- get_fun_from_pkg("iggtree", "geom_image_interactive")
+        label_geom <- get_fun_from_pkg("ggimage", "geom_image_interactive")
         #label_geom <- geom_image_interactive
     } else if (geom == "phylopic") {
         check_installed('ggimage', "for `geom_tiplab()` with geom = 'phylopic'.")
-        label_geom <- get_fun_from_pkg("iggtree", "geom_phylopic_interactive")
+        label_geom <- get_fun_from_pkg("ggimage", "geom_phylopic_interactive")
         #label_geom <- geom_phylopic_interactive
     }
 

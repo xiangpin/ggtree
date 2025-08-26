@@ -83,7 +83,6 @@ geom_text2 <- function(mapping = NULL, data = NULL,
     )
 }
 
-
 ##' @importFrom ggplot2 GeomText
 ##' @importFrom ggplot2 draw_key_text
 GeomTextGGtree <- ggproto("GeomTextGGtree", GeomText,
@@ -115,4 +114,25 @@ StatTreeData <-  ggproto("StatTreeLabel", Stat,
                          }
                          )
 
-
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggiraph GeomInteractiveText
+#' @importFrom ggplot2 ggproto
+#' @export
+GeomInteractiveTextGGtree <- ggproto(
+  "GeomInteractiveTextGGtree",
+  GeomTextGGtree,
+  default_aes = add_default_interactive_aes(GeomTextGGtree),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, ..., .ipar = IPAR_NAMES){
+    if (.check_ipar_params(data)){
+      GeomInteractiveText$draw_panel(data, ..., .ipar = .ipar)
+    }else{
+      GeomTextGGtree$draw_panel(data, ...)
+    }
+  }
+)

@@ -53,8 +53,7 @@ Suggests:
     testthat,
     tibble,
     glue,
-    Biostrings,
-    iggtree
+    Biostrings
 VignetteBuilder: knitr
 ByteCompile: true
 Encoding: UTF-8

@@ -43,7 +43,6 @@ choose_hilight_layer <- function(object, type){
             object$mapping <- default_aes1
         }
         params <- c(list(data=object$data, mapping=object$mapping), object$params)
-        geom_hilight_encircle2_interactive <- getFromNamespace("geom_hilight_encircle2_interactive", "iggtree")
         ly <- do.call("geom_hilight_encircle2_interactive", params)
     }else{
         default_aes2 <- aes(xmin=!!sym("xmin"), xmax=!!sym("xmax"), 
@@ -63,7 +62,6 @@ choose_hilight_layer <- function(object, type){
             params$gradient <- FALSE
             params$roundrect <- TRUE
         }
-        geom_hilight_rect2_interactive <- getFromNamespace("geom_hilight_rect2_interactive", "iggtree")
         ly <- do.call("geom_hilight_rect2_interactive", params)
     }
     return (ly)
@@ -344,8 +342,8 @@ build_image_layer <- function(data, object, params){
     label_geom <- switch(object$geom,
                         # image = geom_image_interactive,
                         # phylopic = geom_phylopic_interactive
-                        image=get_fun_from_pkg("iggtree", "geom_image_interactive"),
-                        phylopic=get_fun_from_pkg("iggtree", "geom_phylopic_interactive")
+                        image=get_fun_from_pkg("ggimage", "geom_image_interactive"),
+                        phylopic=get_fun_from_pkg("ggimage", "geom_phylopic_interactive")
                         )
     image_obj$data <- data
     image_default_aes <- list(image=NULL,imagesize=0.05, imagecolour=NULL, imagecolor=NULL,
@@ -374,7 +372,7 @@ build_text_layer <- function(data, object, params, layout){
     text_obj$data <- data
     if (object$geom=="shadowtext"){
         check_installed('shadowtext', "for `geom_cladelab()` or `geom_striplab()` with geom='shadowtext'.")
-        label_geom <- get_fun_from_pkg("iggtree", "geom_shadowtext_interactive")
+        label_geom <- get_fun_from_pkg("shadowtext", "geom_shadowtext_interactive")
         #label_geom <- geom_shadowtext_interactive
     }
     text_default_aes <- list(textcolour="white", textcolor="white", textsize=3.88, 

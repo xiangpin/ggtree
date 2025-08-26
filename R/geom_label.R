@@ -99,7 +99,6 @@ geom_label2 <- function(mapping = NULL, data = NULL,
 }
 
 
-
 ##' @importFrom ggplot2 GeomLabel
 GeomLabelGGtree <- ggproto("GeomLabelGGtree", GeomLabel,
                            setup_data = function(data, params) {
@@ -126,4 +125,27 @@ GeomLabelGGtree <- ggproto("GeomLabelGGtree", GeomLabel,
                            ## draw_key = draw_key_label
                            )
 
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggiraph GeomInteractiveLabel
+#' @importFrom ggplot2 ggproto
+#' @export
+GeomInteractiveLabelGGtree <- ggproto(
+  "GeomInteractiveLabelGGtree",
+  GeomLabelGGtree,
+  default_aes = add_default_interactive_aes(GeomLabelGGtree),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, ..., .ipar = IPAR_NAMES){
+    if (.check_ipar_params(data)){
+      GeomInteractiveLabel$draw_panel(data, ..., .ipar = .ipar)
+    }else{
+      GeomLabelGGtree$draw_panel(data, ...)
+    }
+
+  }
+)
 

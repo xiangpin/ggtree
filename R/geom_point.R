@@ -262,3 +262,27 @@ GeomPointGGtree <- ggproto("GeomPointGGtree", GeomPoint,
                            ##                   alpha = NA, stroke = 0.5)
                             )
 
+
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggiraph GeomInteractivePoint
+#' @importFrom ggplot2 ggproto
+#' @export
+GeomInteractivePointGGtree <- ggproto(
+  "GeomInteractivePointGGtree",
+  GeomPointGGtree,
+  default_aes = add_default_interactive_aes(GeomPointGGtree),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, ..., .ipar = IPAR_NAMES){
+    if (.check_ipar_params(data)){
+       GeomInteractivePoint$draw_panel(data, ..., .ipar = IPAR_NAMES)
+    }else{
+       GeomPointGGtree$draw_panel(data, ...)
+    }
+  }
+)
+
