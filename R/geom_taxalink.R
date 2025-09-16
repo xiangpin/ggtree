@@ -170,6 +170,7 @@ geom_curvelink <- function(data=NULL,
 
 }
 
+
 #' @importFrom ggplot2 GeomSegment
 #' @importFrom grid gTree curveGrob gpar
 #' @importFrom scales alpha
@@ -177,8 +178,7 @@ GeomCurvelink <- ggproto("GeomCurvelink", GeomSegment,
   required_aes = c("x", "y", "xend", "yend"),
   default_aes = aes(colour = "black", linewidth = 0.5, linetype = 1, alpha = NA, curvature=0.5, hratio=1, ncp=1, curveangle=90, square=FALSE),
   rename_size = TRUE,
-  draw_panel = function(data, panel_params, coord, shape=0.5, outward=TRUE,
-                        arrow = NULL, arrow.fill=NULL, lineend = "butt", na.rm = FALSE) {
+  make_curvelink_data = function(data, panel_params, coord) {
     if (!coord$is_linear()) {
         tmpgroup <- data$group
         starts <- subset(data, select = c(-xend, -yend))
@@ -209,6 +209,11 @@ GeomCurvelink <- ggproto("GeomCurvelink", GeomSegment,
             trans$curvature <- -1 * trans$curvature
         }
     }
+    return(trans)
+  },
+  draw_panel = function(data, panel_params, coord, shape=0.5, outward=TRUE,
+                        arrow = NULL, arrow.fill=NULL, lineend = "butt", na.rm = FALSE) {
+    trans <- GeomCurvelink$make_curvelink_data(data, panel_params, coord)
     arrow.fill <- arrow.fill %|||% trans$colour
 
     grobs <- lapply(seq_len(nrow(trans)), function(i){
@@ -292,4 +297,57 @@ ggname <- getFromNamespace("ggname", "ggplot2")
     } else {
         return (x)
     }
-}    
+}
+
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggplot2 ggproto
+#' @importFrom grid gTree gpar curveGrob
+#' @export
+GeomInteractiveCurvelink <- ggproto(
+  "GeomInteractiveCurvelink",
+  GeomCurvelink,
+  default_aes = add_default_interactive_aes(GeomCurvelink),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, panel_params, coord, shape=0.5, outward=TRUE,
+                        arrow = NULL, arrow.fill=NULL, lineend = "butt",
+                        na.rm = FALSE, .ipar = IPAR_NAMES) {
+    if (! .check_ipar_params(data)){
+       return(GeomCurvelink$draw_panel(data = data,
+                                panel_params = panel_params,
+                                coord = coord,
+                                shape = shape,
+                                outward = outward,
+                                arrow = arrow,
+                                arrow.fill = arrow.fill,
+                                lineend = lineend,
+                                na.rm = na.rm)
+       )
+    }
+
+    trans <- GeomCurvelink$make_curvelink_data(data, panel_params, coord)
+    arrow.fill <- arrow.fill %|||% trans$colour
+
+    grobs <- lapply(seq_len(nrow(trans)), function(i){
+                        subgrob <- curveGrob(
+                              trans$x[i], trans$y[i], trans$xend[i], trans$yend[i],
+                              default.units = "native",
+                              curvature = trans$curvature[i], angle = trans$curveangle[i], ncp = trans$ncp[i],
+                              square = trans$square[i], squareShape = 1, inflect = FALSE, open = TRUE,
+                              gp = gpar(col = alpha(trans$colour[i], trans$alpha[i]),
+                                        fill = alpha(arrow.fill[i], trans$alpha[i]),
+                                        lwd = trans$linewidth[i] * ggplot2::.pt,
+                                        lty = trans$linetype[i],
+                                        lineend = lineend),
+                              arrow = arrow,
+                              shape = shape)
+                        add_interactive_attrs(subgrob, trans[i,], ipar = .ipar)
+                        })
+    class(grobs) <- "gList"
+    return(ggname("geom_curvelink_interactive", gTree(children=grobs)))
+  }
+)  

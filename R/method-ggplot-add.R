@@ -16,7 +16,7 @@ ggplot_add.facet_xlim <- function(object, plot, object_name, ...) {
         names(dummy)[2] <- var
     }
 
-    obj <- geom_blank(aes_(x = ~x), dummy, inherit.aes = FALSE)
+    obj <- geom_blank(aes(x = !!sym("x")), dummy, inherit.aes = FALSE)
     ggplot_add(obj, plot, object_name, ...)
 }
 
@@ -242,6 +242,7 @@ ggplot_add.tiplab <- function(object, plot, object_name, ...) {
     ggplot_add(ly, plot, object_name, ...)
 }
 
+##' @importFrom ggiraph geom_text_interactive
 ##' @method ggplot_add tiplab_ylab
 ##' @export
 ggplot_add.tiplab_ylab <- function(object, plot, object_name, ...) {
@@ -257,7 +258,7 @@ ggplot_add.tiplab_ylab <- function(object, plot, object_name, ...) {
     df <- plot$data
     if ('label' %in% names(object$mapping)){
         if (object$geom == 'text'){
-            xx <- do.call('geom_text', list(mapping=object$mapping))
+            xx <- do.call('geom_text_interactive', list(mapping=object$mapping))
             xx$computed_mapping <- c(xx$mapping, plot$mapping[setdiff(names(plot$mapping), names(xx$mapping))])
             class(xx$computed_mapping) <- "uneval"
             if (!is.null(object$data)){
@@ -420,8 +421,8 @@ ggplot_add.cladelab <- function(object, plot, object_name, ...){
         bar_default_aes <- c(bar_default_aes, list(curvature = .5, ncp = 5))
     }
     bar_obj$mapping <- reset_mapping(defaultm=bar_default_aes, inputm=object$mapping)
-    ifelse(is.null(bar_obj$mapping),bar_obj$mapping <- aes_(x=~x, xend=~xend, y=~y, yend=~yend),
-           bar_obj$mapping <- modifyList(bar_obj$mapping, aes_(x=~x, xend=~xend, y=~y, yend=~yend)))
+    ifelse(is.null(bar_obj$mapping),bar_obj$mapping <- aes(x=!!sym("x"), xend=!!sym("xend"), y=!!sym("y"), yend=!!sym("yend")),
+           bar_obj$mapping <- modifyList(bar_obj$mapping, aes(x=!!sym("x"), xend=!!sym("xend"), y=!!sym("y"), yend=!!sym("yend"))))
     bar_dot_params <- reset_dot_params(mapping=bar_obj$mapping, 
                                        defaultp=bar_params, 
                                        default_aes=bar_default_aes,
@@ -481,7 +482,7 @@ ggplot_add.hilight <- function(object, plot, object_name, ...){
         if (is.null(object$data)){
              if (!is.null(object$mapping$subset)){
                  object$data <- subset(plot$data, eval(parse(text=quo_name(object$mapping$subset))))
-                 object$mapping <- modifyList(object$mapping, aes_(node=~node))
+                 object$mapping <- modifyList(object$mapping, aes(node=!!sym("node")))
                  object$mapping <- object$mapping[names(object$mapping)!="subset"]
                  clade_node <- as.vector(object$data[["node"]])
              }else{
@@ -588,8 +589,8 @@ ggplot_add.striplabel <- function(object, plot, object_name, ...) {
     strip_df <- get_striplabel_position(d, object$taxa1, object$taxa2,
                                         object$offset, object$align,
                                         object$extend, adjustRatio=1.02)
-    ly_bar <- geom_segment(aes_(x = ~x, xend = ~xend,
-                                y = ~y, yend = ~yend),
+    ly_bar <- geom_segment(aes(x = !!sym("x"), xend = !!sym("xend"),
+                                y = !!sym("y"), yend = !!sym("yend")),
                            data = strip_df, size = object$barsize,
                            color = object$color)
 
@@ -605,14 +606,14 @@ ggplot_add.striplabel <- function(object, plot, object_name, ...) {
     }
 
     if(object$geom == 'text') {
-        ly_text <- geom_text(aes_(x = ~x, y = ~y, label = ~label),
+        ly_text <- geom_text(aes(x = !!sym("x"), y = !!sym("y"), label = !!sym("label")),
                              data = strip_text_df, size = object$fontsize,
                              angle = object$angle, family = object$family,
                              hjust = object$hjust, parse = object$parse,
                              color = object$color
                              )
     } else {
-        ly_text <- geom_label(aes_(x = ~x, y = ~y, label = ~label),
+        ly_text <- geom_label(aes(x = !!sym("x"), y = !!sym("y"), label = !!sym("label")),
                               data = strip_text_df, size = object$fontsize,
                               angle = object$angle, family = object$family,
                               hjust = object$hjust, parse = object$parse,
@@ -726,8 +727,9 @@ ggplot_add.striplab <- function(object, plot, object_name, ...){
     bar_default_aes <- list(barcolour="black", barcolor="black", barsize=0.5, colour="black", size=0.5,
                             linetype=1, alpha=NA, inherit.aes=FALSE, show.legend=NA)
     bar_obj$mapping <- reset_mapping(defaultm=bar_default_aes, inputm=object$mapping)
-    ifelse(is.null(bar_obj$mapping),bar_obj$mapping <- aes_(x=~x, xend=~xend, y=~y, yend=~yend),
-           bar_obj$mapping <- modifyList(bar_obj$mapping, aes_(x=~x, xend=~xend, y=~y, yend=~yend)))
+    ifelse(is.null(bar_obj$mapping),
+           bar_obj$mapping <- aes(x=!!sym("x"), xend=!!sym("xend"), y=!!sym("y"), yend=!!sym("yend")), 
+           bar_obj$mapping <- modifyList(bar_obj$mapping, aes(x=!!sym("x"), xend=!!sym("xend"), y=!!sym("y"), yend=!!sym("yend"))))    
     bar_dot_params <- reset_dot_params(mapping=bar_obj$mapping,
                                        defaultp=bar_params,
                                        default_aes=bar_default_aes,
@@ -792,7 +794,6 @@ ggplot_add.scale_ggtree <- function(object, plot, object_name, ...) {
     ggplot_add(obj, plot, object_name, ...)
 }
 
-##' @importFrom ggplot2 aes_
 ##' @importFrom rlang abort as_name
 ##' @export
 ggplot_add.taxalink <- function(object, plot, object_name, ...){
@@ -841,12 +842,12 @@ ggplot_add.taxalink <- function(object, plot, object_name, ...){
     if (!is.null(object$data) && !is.null(object$mapping)){
         object$data <- cbind(object$data, dat)
         object$mapping <- object$mapping[!names(object$mapping) %in% c("taxa1", "taxa2")]
-        object$mapping <- modifyList(object$mapping, aes_(x=~x, y=~y, xend=~xend, yend=~yend))
+        object$mapping <- modifyList(object$mapping, aes(x=!!sym("x"), y=!!sym("y"), xend=!!sym("xend"), yend=!!sym("yend")))
     }else{
         object$data <- dat
-        object$mapping <- aes_(x=~x, y=~y, xend=~xend, yend=~yend)
+        object$mapping <- aes(x=!!sym("x"), y=!!sym("y"), xend=!!sym("xend"), yend=!!sym("yend"))
     }
     params <- c(list(data=object$data, mapping=object$mapping, outward=object$outward), object$params)
-    obj <- do.call("geom_curvelink", params)
+    obj <- do.call("geom_curvelink_interactive", params)
     ggplot_add(obj, plot, object_name, ...)
 }

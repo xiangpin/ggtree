@@ -149,6 +149,8 @@ p <- ggtree(tree) + xlim(NA, 6)
 
 p + geom_cladelab(node=45, label="test label") +
     geom_cladelab(node=34, label="another clade")
+
+library("shadowtext")
 p2 <- p + geom_cladelab(data=data,
                         mapping=aes(
                              node=id, 

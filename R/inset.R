@@ -95,7 +95,7 @@ nodebar <- function(data, cols, color, alpha=1, position="stack") {
     type <- value <- NULL
 
     ldf <- gather(data, type, value, !! cols) %>% split(., .$node)
-    bars <- lapply(ldf, function(df) ggplot(df, aes_(x=1, y=~value, fill=~type)) +
+    bars <- lapply(ldf, function(df) ggplot(df, aes(x=1, y=!!sym("value"), fill=!!sym("type"))) +
                                      geom_bar(stat='identity', alpha=alpha, position=position) +
                                      theme_inset()
                    )
@@ -136,7 +136,7 @@ nodepie <- function(data, cols, color, alpha=1, outline.color="transparent", out
 
 ##' @importFrom methods missingArg
 ggpie <- function(data, y, fill, color, alpha=1, outline.color="transparent", outline.size=0) {
-    p <- ggplot(data, aes_(x=1, y=y, fill=fill)) +
+    p <- ggplot(data, aes(x=1, y=!!sym("y"), fill=!!sym("fill"))) +
         geom_bar(stat='identity', alpha=alpha, color=outline.color, size=outline.size, show.legend = F) +
         coord_polar(theta='y') + theme_inset()
 

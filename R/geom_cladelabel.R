@@ -61,7 +61,7 @@ geom_cladelabel <- function(node, label,
               class = 'cladelabel')
 }
 
-
+#' @importFrom ggiraph GeomInteractiveText GeomInteractiveLabel
 geom_cladelabel_rectangular <- function(node, label,
                             offset      = 0,
                             offset.text = 0,
@@ -113,7 +113,7 @@ geom_cladelabel_rectangular <- function(node, label,
             ## no fill parameter
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveText, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm, parse=parse, 
                                         horizontal=horizontal, ...)
@@ -121,7 +121,7 @@ geom_cladelabel_rectangular <- function(node, label,
         } else {
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, fill=fill,family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveLabel, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm,
                                         parse = parse,  horizontal=horizontal, ...)
@@ -137,7 +137,7 @@ geom_cladelabel_rectangular <- function(node, label,
             ## no fill parameter
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, color=labelcolor, family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveText, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm, parse=parse, horizontal=horizontal, ...)
 
@@ -145,7 +145,7 @@ geom_cladelabel_rectangular <- function(node, label,
             layer_text = stat_cladeText(node=node, label=label, offset=offset+offset.text,
                                         align=align, size=fontsize, angle=angle, color=labelcolor,
                                         fill=fill,family=family,
-                                        mapping=mapping, data=data, geom=geom, hjust=hjust,
+                                        mapping=mapping, data=data, geom=GeomInteractiveLabel, hjust=hjust,
                                         position=position, show.legend = show.legend,
                                         inherit.aes = inherit.aes, na.rm=na.rm,
                                         parse = parse, horizontal=horizontal, ...)
@@ -180,7 +180,8 @@ stat_cladeText <- function(mapping = NULL, data = NULL,
                            show.legend = NA, inherit.aes = FALSE,
                            na.rm = FALSE, parse = FALSE, horizontal=TRUE) {
 
-    default_aes <- aes_(x=~x, y=~y, node=~node, parent=~parent, angle=~angle)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), node=!!sym("node"), 
+                       parent=!!sym("parent"), angle=!!sym("angle"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -215,7 +216,8 @@ stat_cladeBar <- function(mapping=NULL, data=NULL,
                           show.legend=NA, inherit.aes=FALSE, na.rm=FALSE) {
 
 
-    default_aes <- aes_(x=~x, y=~y, node=~node, parent=~parent, xend=~x, yend=~y)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), node=!!sym("node"), 
+                       parent=!!sym("parent"), xend=!!sym("x"), yend=!!sym("y"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {

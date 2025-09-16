@@ -31,7 +31,7 @@ geom_treescale <- function(x=NULL, y=NULL, width=NULL, offset=NULL,
     na.rm=TRUE
     inherit.aes=FALSE
 
-    default_aes <- aes_(x=~x, y=~y)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"))
     mapping <- default_aes
 
     ly <- list(
@@ -64,7 +64,7 @@ stat_treeScaleLine <- function(mapping=NULL, data=NULL,
                            xx, yy, width, offset, color, offset.label, labelname, ...,
                            show.legend=NA, inherit.aes=FALSE, na.rm=FALSE){
 
-    default_aes <- aes_(x=~x, y=~y, xend=~x, yend=~y)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), xend=!!sym("x"), yend=!!sym("y"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -95,7 +95,7 @@ stat_treeScaleText <- function(mapping=NULL, data=NULL,
                                xx, yy, width, offset, color, offset.label, labelname, ...,
                                show.legend=NA, inherit.aes=TRUE, na.rm=FALSE) {
 
-    default_aes <- aes_(x=~x, y=~y, label=~x)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), label=!!sym("x"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -126,7 +126,7 @@ stat_treeScaleLabel <- function(mapping=NULL, data=NULL,
                                 geom="text", position="identity", 
                                 xx, yy, width, offset, color, offset.label, labelname, ...,
                                 show.legend=NA, inherit.aes=TRUE, na.rm=FALSE){
-    default_aes <- aes_(x=~x, y=~y, label=~x)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), label=!!sym("x"))
     if (is.null(mapping)) {
         mapping <- default_aes
     }else{
