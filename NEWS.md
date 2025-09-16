@@ -22,8 +22,10 @@
 
 -->
 
-# ggtree 3.17.1.001
+# ggtree 3.99.0
 
++ interactive ggtree (2025-09-16, #662)
+  - incorporated iggtree, <https://github.com/YuLab-SMU/iggtree>
 + Added support for XStringSet in msaplot (2027-07-13, Sun, #631)
 
 # ggtree 3.17.1
