@@ -19,7 +19,6 @@
 ##' @return text layer
 ##' @importFrom ggplot2 layer
 ##' @importFrom ggplot2 position_nudge
-##' @importFrom ggplot2 aes_string
 ##' @importFrom ggfun get_aes_var
 ##' @export
 ##' @seealso
@@ -46,7 +45,7 @@ geom_text2 <- function(mapping = NULL, data = NULL,
         position <- position_nudge(nudge_x, nudge_y)
     }
 
-    default_aes <- aes_() #node=~node)
+    default_aes <- aes() #node=~node)
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -59,7 +58,8 @@ geom_text2 <- function(mapping = NULL, data = NULL,
         parse <- FALSE
         family <- "EmojiOne"
         ## label_aes <- aes_string(label=paste0("suppressMessages(emoji(", as.list(mapping)$label,"))"))
-        label_aes <- aes_string(label=paste0("suppressMessages(emoji(", get_aes_var(mapping, "label"), "))"))
+        #label_aes <- aes_string(label=paste0("suppressMessages(emoji(", get_aes_var(mapping, "label"), "))"))
+        label_aes <- aes(label = emoji(.data[[get_aes_var(mapping, "label")]]))
         ## mapping <- modifyList(mapping, aes(label=emoji(!!mapping$label))) ## ggplot2 >= 2.3.0
         mapping <- modifyList(mapping, label_aes)
     }
@@ -82,7 +82,6 @@ geom_text2 <- function(mapping = NULL, data = NULL,
         check.aes = FALSE
     )
 }
-
 
 ##' @importFrom ggplot2 GeomText
 ##' @importFrom ggplot2 draw_key_text
@@ -115,4 +114,25 @@ StatTreeData <-  ggproto("StatTreeLabel", Stat,
                          }
                          )
 
-
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggiraph GeomInteractiveText
+#' @importFrom ggplot2 ggproto
+#' @export
+GeomInteractiveTextGGtree <- ggproto(
+  "GeomInteractiveTextGGtree",
+  GeomTextGGtree,
+  default_aes = add_default_interactive_aes(GeomTextGGtree),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, ..., .ipar = IPAR_NAMES){
+    if (.check_ipar_params(data)){
+      GeomInteractiveText$draw_panel(data, ..., .ipar = .ipar)
+    }else{
+      GeomTextGGtree$draw_panel(data, ...)
+    }
+  }
+)

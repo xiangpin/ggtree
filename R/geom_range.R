@@ -6,7 +6,6 @@
 ##' @param center center of the range, mean, median or auto (default, the center of the range)
 ##' @param ... additional parameter, e.g. color, linewidth, alpha
 ##' @return ggplot layer
-##' @importFrom ggplot2 aes_string
 ##' @export
 ##' @author Guangchuang Yu
 ##' @references  
@@ -23,7 +22,7 @@ geom_range_internal <- function(range, center, mapping=NULL, position = "identit
     na.rm = TRUE
     inherit.aes = FALSE
 
-    default_aes <- aes_(x=~x, y=~y, xend=~x, yend=~y)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"), xend=!!sym("x"), yend=!!sym("y"))
     if (!is.null(mapping)){
         default_aes <- modifyList(mapping, default_aes)
     }
@@ -34,13 +33,13 @@ geom_range_internal <- function(range, center, mapping=NULL, position = "identit
     }
 
 
-    mapping <- modifyList(default_aes, aes_string(center=center, lower=lower, upper=upper))
+    mapping <- modifyList(default_aes, aes(center=!!sym("center"), lower=!!sym("lower"), upper=!!sym("upper")))
 
     layer(
         stat = StatRange,
         mapping = mapping,
         data = NULL,
-        geom = GeomSegment,
+        geom = GeomInteractiveSegment,
         position = position,
         show.legend=show.legend,
         inherit.aes = inherit.aes,

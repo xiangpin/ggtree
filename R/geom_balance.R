@@ -12,7 +12,8 @@
 #' @param extendto extend xmax of the highlight rectangle to the value of extendto
 #' @return ggplot2
 #' @export
-#' @importFrom ggplot2 aes_
+#' @importFrom rlang sym
+#' @importFrom ggplot2 aes
 #' @importFrom ggplot2 GeomRect
 #' @importFrom utils packageVersion
 #' @author Justin Silverman and modified by Guangchuang Yu
@@ -30,6 +31,7 @@
 #' For more detailed demonstration, please refer to chapter 5.2.2 of 
 #' *Data Integration, Manipulation and Visualization of Phylogenetic Trees*
 #' <http://yulab-smu.top/treedata-book/index.html> by Guangchuang Yu.
+#' @importFrom ggiraph GeomInteractiveRect
 geom_balance <- function(node, fill="steelblue", color='white', alpha=.5, extend=0, extendto=NULL) {
 
   data = NULL
@@ -39,14 +41,14 @@ geom_balance <- function(node, fill="steelblue", color='white', alpha=.5, extend
   na.rm = TRUE
   inherit.aes = FALSE
 
-  default_aes <- aes_(x=~x, y=~y, node=~node, parent=~parent, branch.length=~branch.length)
-  mapping <- default_aes
+  mapping <- aes(x=!!sym("x"), y=!!sym("y"), node=!!sym("node"), 
+                     parent=!!sym("parent"), branch.length=!!sym("branch.length"))
 
   layer(
     stat=StatBalance,
     data = data,
     mapping = mapping,
-    geom = GeomRect,
+    geom = GeomInteractiveRect,
     position = position,
     show.legend=show.legend,
     inherit.aes = inherit.aes,
