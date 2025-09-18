@@ -22,7 +22,8 @@
 ‘ggtree’ extends the ‘ggplot2’ plotting system which implemented the
 grammar of graphics. ‘ggtree’ is designed for visualization and
 annotation of phylogenetic trees and other tree-like structures with
-their annotation data.
+their annotation data.<br><br>See also
+<https://yulab-smu.top/contribution-tree-data/>
 
 ## :writing_hand: Authors
 
