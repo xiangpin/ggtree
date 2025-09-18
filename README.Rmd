@@ -55,11 +55,6 @@ School of Basic Medical Sciences, Southern Medical University
 
 <https://yulab-smu.top>
 
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?hashtags=ggtree&url=http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/abstract&screen_name=guangchuangyu)
-[![saythanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/GuangchuangYu)
-`r badger::badge_custom('follow me on', 'WeChat', 'green', 'https://guangchuangyu.github.io/blog_images/biobabble.jpg')`
-
-
 
 If you use `r Biocpkg('ggtree')` in published research, please cite the most appropriate paper(s) from this list:
 
@@ -77,7 +72,8 @@ doi: [10.1111/2041-210X.12628](https://doi.org/10.1111/2041-210X.12628)
 
 
 <center>
-<a href="https://www.routledge.com/Data-Integration-Manipulation-and-Visualization-of-Phylogenetic-Trees/Yu/p/book/9781032233574"><img src="https://yulab-smu.top/treedata-book/9781032233574_cover_review.png" style="width:500px;border:2px solid black;"/></a>
+<a href="https://www.routledge.com/Data-Integration-Manipulation-and-Visualization-of-Phylogenetic-Trees/Yu/p/book/9781032233574"><img src="https://yulab-smu.top/treedata-book/9781032233574_cover_review.png" style="height:320px;border:2px solid black;"/></a>
+<a href="https://weread.qq.com/web/bookDetail/8ad32a00813ab81bbg0183d2"><img src="https://yulab-smu.top/images/book-cover-cn.png" style="height:320px;border:2px solid black;"/></a>
 </center>
 
 
