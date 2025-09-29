@@ -46,19 +46,20 @@ geom_tree <- function(mapping=NULL, data=NULL, layout="rectangular", multiPhylo=
         continuous <- ifelse(continuous, "color", "none")
     }
     continuous <- match.arg(continuous, c("color", "colour", "size", "none", "all", "linewidth"))
-    stat_tree(data=data, mapping=mapping, geom="segment", position=position,
+    stat_tree(data=data, mapping=mapping, geom=GeomInteractiveSegment, position=position,
               layout=layout, multiPhylo=multiPhylo, continuous=continuous, ...)
 }
 
 
-stat_tree <- function(mapping=NULL, data=NULL, geom="segment", position="identity",
+#' @importFrom ggiraph GeomInteractiveSegment
+stat_tree <- function(mapping=NULL, data=NULL, geom=GeomInteractiveSegment, position="identity",
                       layout="rectangular", multiPhylo=FALSE, lineend="round", MAX_COUNT=5,
                       ..., arrow=NULL, rootnode=TRUE, show.legend=NA, inherit.aes=TRUE,
                       na.rm=TRUE, check.param=TRUE, continuous="none") {
 
-    default_aes <- aes_(x=~x, y=~y,node=~node, parent=~parent)
+    default_aes <- aes(x=!!sym("x"), y=!!sym("y"),node=!!sym("node"), parent=!!sym("parent"))
     if (multiPhylo) {
-        default_aes <- modifyList(default_aes, aes_(.id=~.id))
+        default_aes <- modifyList(default_aes, aes(.id=!!sym(".id")))
     }
 
     if (is.null(mapping)) {
@@ -108,7 +109,7 @@ stat_tree <- function(mapping=NULL, data=NULL, geom="segment", position="identit
              )
     } else if (layout %in% c("slanted", "radial", "equal_angle", "daylight", "ape")) {
         line.type <- getOption(x="layout.radial.linetype", default="straight")
-        geom <- switch(line.type, straight=GeomSegmentGGtree, curved=geom)
+        geom <- switch(line.type, straight=GeomInteractiveSegmentGGtree, curved=geom)
         layer(stat=StatTree,
               data=data,
               mapping=mapping,
@@ -126,11 +127,11 @@ stat_tree <- function(mapping=NULL, data=NULL, geom="segment", position="identit
               check.aes = FALSE
               )
     } else if (layout %in% c("ellipse", "roundrect")){
-        mapping <- modifyList(mapping, aes_(isTip=~isTip))
+        mapping <- modifyList(mapping, aes(isTip=!!sym("isTip")))
         layer(stat=StatTreeEllipse,
               data=data,
               mapping=mapping,
-              geom=GeomCurvelink,
+              geom=GeomInteractiveCurvelink,
               position=position,
               show.legend=show.legend,
               inherit.aes=inherit.aes,

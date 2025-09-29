@@ -12,6 +12,7 @@
 ##' tr<- rtree(15)
 ##' x <- ggtree(tr)
 ##' x + geom_tippoint()
+##' @importFrom rlang .data sym
 ##' @references
 ##' For more detailed demonstration, please refer to chapter 4.3.2 of 
 ##' *Data Integration, Manipulation and Visualization of Phylogenetic Trees*
@@ -19,7 +20,7 @@
 geom_tippoint <- function(mapping = NULL, data = NULL,
                        position = "identity", na.rm = FALSE,
                           show.legend = NA, inherit.aes = TRUE, ...) {
-    self_mapping <- aes_(node = ~node, subset = ~isTip)
+    self_mapping <- aes(node = !!sym("node"), subset = !!sym("isTip"))
     if (is.null(mapping)) {
         mapping <- self_mapping
     } else {
@@ -27,14 +28,11 @@ geom_tippoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(self_mapping, mapping)   
         } else { 
             mapping <- modifyList(self_mapping, mapping)
-            subset_mapping <- aes_string(subset = paste0(
-                                             as.expression(get_aes_var(mapping, "subset")),
-                                             '&isTip')
-                                         )
+            subset_mapping <- aes(subset = !!new_quosure(parse_expr(paste0(get_aes_var(mapping, "subset"),' &isTip'))))
             mapping <- modifyList(mapping, subset_mapping)
         }
     }
-    geom_point2(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
+    geom_point2_interactive(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
 }
 
 ## angle is not supported,
@@ -64,7 +62,6 @@ geom_tippoint <- function(mapping = NULL, data = NULL,
 ##' @title geom_nodepoint
 ##' @inheritParams geom_point2
 ##' @return node point layer
-##' @importFrom ggplot2 aes_string
 ##' @export
 ##' @author Guangchuang Yu
 ##' library(ggtree)
@@ -78,7 +75,7 @@ geom_tippoint <- function(mapping = NULL, data = NULL,
 geom_nodepoint <- function(mapping = NULL, data = NULL,
                        position = "identity", na.rm = FALSE,
                        show.legend = NA, inherit.aes = TRUE, ...) {
-    self_mapping <- aes_(node = ~node, subset = ~ (!isTip))
+    self_mapping <- aes(node = .data[["node"]], subset = !.data[["isTip"]])
     if (is.null(mapping)) {
         mapping <- self_mapping
     } else {
@@ -86,14 +83,11 @@ geom_nodepoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(self_mapping, mapping)   
         } else {
             mapping <- modifyList(self_mapping, mapping)
-            subset_mapping <- aes_string(subset = paste0(
-                                             as.expression(get_aes_var(mapping, "subset")),
-                                             '&!isTip')
-                                         )
-            mapping <- modifyList(mapping, subset_mapping)               
+            subset_mapping <- aes(subset = !!new_quosure(parse_expr(paste0(get_aes_var(mapping, "subset"),' & !isTip'))))
+            mapping <- modifyList(mapping, subset_mapping)
         }
     }
-    geom_point2(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
+    geom_point2_interactive(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
 }
 
 
@@ -130,16 +124,13 @@ geom_rootpoint <- function(mapping = NULL, data = NULL,
             mapping <- modifyList(self_mapping, mapping)               
         } else {
             mapping <- modifyList(self_mapping, mapping)
-            subset_mapping <- aes_string(subset = paste0(
-                                             as.expression(get_aes_var(mapping, "subset")),
-                                             '&node==parent')
-                                         )
-            mapping <- modifyList(mapping, subset_mapping)   
+            subset_mapping <- aes(subset = !!new_quosure(parse_expr(paste0(get_aes_var(mapping, "subset"),' & node==parent'))))
+            mapping <- modifyList(mapping, subset_mapping)
         }
 
 
     }
-    geom_point2(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
+    geom_point2_interactive(mapping, data, position, na.rm, show.legend, inherit.aes, stat = StatTreeData, ...)
 }
 
 
@@ -225,7 +216,7 @@ geom_point2 <- function(mapping = NULL, data = NULL, stat = "identity",
                        show.legend = NA, inherit.aes = TRUE, ...) {
   
 
-    default_aes <- aes_() # node=~node)
+    default_aes <- aes() # node=~node)
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -270,4 +261,28 @@ GeomPointGGtree <- ggproto("GeomPointGGtree", GeomPoint,
                            ## default_aes = aes(shape = 19, colour = "black", size = 1.5, fill = NA,
                            ##                   alpha = NA, stroke = 0.5)
                             )
+
+
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggiraph GeomInteractivePoint
+#' @importFrom ggplot2 ggproto
+#' @export
+GeomInteractivePointGGtree <- ggproto(
+  "GeomInteractivePointGGtree",
+  GeomPointGGtree,
+  default_aes = add_default_interactive_aes(GeomPointGGtree),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, ..., .ipar = IPAR_NAMES){
+    if (.check_ipar_params(data)){
+       GeomInteractivePoint$draw_panel(data, ..., .ipar = IPAR_NAMES)
+    }else{
+       GeomPointGGtree$draw_panel(data, ...)
+    }
+  }
+)
 

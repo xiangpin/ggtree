@@ -59,7 +59,7 @@ geom_label2 <- function(mapping = NULL, data = NULL,
         position <- position_nudge(nudge_x, nudge_y)
     }
 
-    default_aes <- aes_() #node=~node)
+    default_aes <- aes() #node=~node)
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -68,7 +68,9 @@ geom_label2 <- function(mapping = NULL, data = NULL,
 
     if (parse == "emoji") {
         check_installed('emojifont', "for `geom_label2()` with parse = 'emoji'.")
-        label_aes <- aes_string(label=paste0("suppressMessages(emoji(", as.list(mapping)$label,"))"))
+        emoji <- get_fun_from_pkg("emojifont", "emoji")
+        #label_aes <- aes_string(label=paste0("suppressMessages(emoji(", as.list(mapping)$label,"))"))
+        label_aes <- aes(label = emoji(.data[[get_aes_var(mapping, "label")]]))
         mapping <- modifyList(mapping, label_aes)
         emoji <- get_fun_from_pkg("emojifont", "emoji")
         parse <- FALSE
@@ -97,7 +99,6 @@ geom_label2 <- function(mapping = NULL, data = NULL,
 }
 
 
-
 ##' @importFrom ggplot2 GeomLabel
 GeomLabelGGtree <- ggproto("GeomLabelGGtree", GeomLabel,
                            setup_data = function(data, params) {
@@ -124,4 +125,27 @@ GeomLabelGGtree <- ggproto("GeomLabelGGtree", GeomLabel,
                            ## draw_key = draw_key_label
                            )
 
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggiraph GeomInteractiveLabel
+#' @importFrom ggplot2 ggproto
+#' @export
+GeomInteractiveLabelGGtree <- ggproto(
+  "GeomInteractiveLabelGGtree",
+  GeomLabelGGtree,
+  default_aes = add_default_interactive_aes(GeomLabelGGtree),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, ..., .ipar = IPAR_NAMES){
+    if (.check_ipar_params(data)){
+      GeomInteractiveLabel$draw_panel(data, ..., .ipar = .ipar)
+    }else{
+      GeomLabelGGtree$draw_panel(data, ...)
+    }
+
+  }
+)
 

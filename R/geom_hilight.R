@@ -77,6 +77,13 @@
 #' # display the high light layer with round rectangular.
 #' p8 <- p + geom_hilight(data=dat, mapping=aes(node=id, fill=type), type = "roundrect", alpha=0.68)
 #' p2/ p3/ p4/ p5 / p6/ p7/ p8
+#' library(ggiraph)
+#' f <- ggtree(tree, layout = 'daylight', mapping = aes(tooltip = round(branch.length, 2), data_id = node))
+#' f1 <- f + geom_hilight(data=dat, mapping=aes(node=id, fill=type, tooltip = id, data_id = id), to.bottom = TRUE)
+#' ff <- ggtree(tree, layout = 'circular', mapping = aes(tooltip = round(branch.length, 2), data_id = node))
+#' ff1 <- ff + geom_hilight(data=dat, mapping=aes(node=id, fill=type, tooltip = id, data_id = id), to.bottom = TRUE)
+#' girafe(ggobj = f1)
+#' girafe(ggobj = ff1)
 #' @references  
 #' For more detailed demonstration, please refer to chapter 5.2.2 of 
 #' *Data Integration, Manipulation and Visualization of Phylogenetic Trees*
@@ -132,6 +139,34 @@ GeomHilightRect <- ggproto("GeomHilightRect", Geom,
                            required_aes = c("xmin", "xmax", "ymin", "ymax", "clade_root_node"),
                            draw_key = draw_key_polygon,
                            rename_size = TRUE,
+                           make_hilight_data = function(data, align = "none"){
+                               data$xmax <- data$xmax + data$extend
+                               if (!any(is.null(data$extendto)) && !any(is.na(data$extendto))){
+                                   # check whether the x of tree is reversed.
+                                   flag1 <- data$xmin < data$xmax
+                                   # check whether extendto is more than xmax
+                                   flag2 <- data$extendto < data$xmax
+                                   flag <- flag1 == flag2
+                                   if (all(flag1) && any(flag)){
+                                       cli_alert_warning(c("{.code extendto} ", paste0(data$extendto[flag], collapse="; "),
+                                                    ifelse(length(data$extendto[flag])>1, " are", " is")," too small for node: ",
+                                                    paste0(data$clade_root_node[flag], collapse="; "),", keep the original xmax value(s): ",
+                                                    paste0(data$xmax[flag], collapse="; "), "."), wrap = TRUE)
+                                       data$xmax[!flag] <- data$extendto[!flag]
+                                   }else if(!all(flag1) && any(flag)){
+                                       cli_alert_warning(c("{.code extendto} ", paste0(data$extendto[flag], collapse="; "),
+                                                    ifelse(length(data$extendto[flag])>1, " are", " is"), " too big for node: ",
+                                                    paste0(data$clade_root_node[flag], collapse="; "), ", keep the original xmax value(s): ",
+                                                    paste0(data$xmax[flag], collapse="; "), "."), wrap = TRUE)
+                                       data$xmax[!flag] <- data$extendto[!flag]
+                                   }else{
+                                       data$xmax <- data$extendto
+                                   }
+                               }
+                               data <- build_align_data(data=data, align=align)
+                               return(data)
+                           
+                           },
                            draw_panel = function(self, data, panel_params, coord, 
                                                  linejoin = "mitre", align="none", 
                                                  gradient = FALSE, 
@@ -140,30 +175,7 @@ GeomHilightRect <- ggproto("GeomHilightRect", Geom,
                                                  roundrect = FALSE,
                                                  roundrect.r = 0.05
                                                  ){
-                               data$xmax <- data$xmax + data$extend
-                               if (!any(is.null(data$extendto)) && !any(is.na(data$extendto))){
-                                   # check whether the x of tree is reversed.
-                                   flag1 <- data$xmin < data$xmax
-                                   # check whether extendto is more than xmax 
-                                   flag2 <- data$extendto < data$xmax
-                                   flag <- equals(flag1, flag2)
-                                   if (all(flag1) && any(flag)){
-                                       cli_alert_warning(c("{.code extendto} ", paste0(data$extendto[flag], collapse="; "), 
-                                                    ifelse(length(data$extendto[flag])>1, " are", " is")," too small for node: ", 
-                                                    paste0(data$clade_root_node[flag], collapse="; "),", keep the original xmax value(s): ", 
-                                                    paste0(data$xmax[flag], collapse="; "), "."), wrap = TRUE)
-                                       data$xmax[!flag] <- data$extendto[!flag]
-                                   }else if(!all(flag1) && any(flag)){
-                                       cli_alert_warning(c("{.code extendto} ", paste0(data$extendto[flag], collapse="; "), 
-                                                    ifelse(length(data$extendto[flag])>1, " are", " is"), " too big for node: ", 
-                                                    paste0(data$clade_root_node[flag], collapse="; "), ", keep the original xmax value(s): ", 
-                                                    paste0(data$xmax[flag], collapse="; "), "."), wrap = TRUE)
-                                       data$xmax[!flag] <- data$extendto[!flag]
-                                   }else{
-                                       data$xmax <- data$extendto 
-                                   }
-                               }
-                               data <- build_align_data(data=data, align=align) 
+                               data <- GeomHilightRect$make_hilight_data(data, align)
                                if (!coord$is_linear()) {
                                    if (gradient){
                                        cli_alert_warning("The gradient color hight light layer only presents in 
@@ -175,37 +187,10 @@ GeomHilightRect <- ggproto("GeomHilightRect", Geom,
                                    }
                                    aesthetics <- setdiff(colnames(data), #"x.start", "y.start", "x.stop", "y.stop"), 
                                                          c("xmin", "xmax", "ymin", "ymax", "clade_root_node"))
-                                   #df.start <- lapply(split(data, data$clade_root_node), function(node){
-                                   #                 dplyr::mutate(node, x=.data$xmin, y=(.data$ymax-.data$ymin)/2)
-                                   #                 }) %>%
-                                   #            dplyr::bind_rows() %>%
-                                   #            dplyr::select(!c("xmin", "xmax", "ymin", "ymax"))
-                                   #df.stop <- lapply(split(data, data$clade_root_node), function(node){
-                                   #                 dplyr::mutate(node, x=.data$xmax, y=(.data$ymax-.data$ymin)/2)
-                                   #                 }) %>% 
-                                   #           dplyr::bind_rows() %>%
-                                   #           dplyr::select(!c("xmin", "xmax", "ymin", "ymax"))
-                                   #
-                                   #df.start <- ggplot2::coord_munch(coord, data = df.start, panel_params) %>% 
-                                   #            dplyr::select(c("x", "y", "clade_root_node")) %>%
-                                   #            dplyr::rename(x.start="x", y.start="y")
-
-                                   #df.stop <- ggplot2::coord_munch(coord, data = df.stop, panel_params) %>%
-                                   #           dplyr::select(c("x", "y", "clade_root_node")) %>%
-                                   #           dplyr::rename(x.stop="x", y.stop="y")
-
-                                   #df <- df.start %>% left_join(df.stop, by="clade_root_node")
-                                   #data <- data %>% dplyr::left_join(df, by="clade_root_node")
+                                   
                                    polys <- lapply(split(data, seq_len(nrow(data))), function(row) {
                                                  poly <- rect_to_poly(row$xmin, row$xmax, row$ymin, row$ymax)
                                                  aes <- row[rep(1,5), aesthetics] 
-                                                 #draw_panel_polar(data = cbind(poly, aes), 
-                                                 #                 panel_params = panel_params, 
-                                                 #                 coord = coord, 
-                                                 #                 gradient = gradient, 
-                                                 #                 gradient.direction = gradient.direction,
-                                                 #                 gradient.length.out = gradient.length.out
-                                                 #   )
                                                  GeomPolygon$draw_panel(vctrs::vec_cbind(poly, aes), panel_params, coord)
                                                  })
                                    ggname("geom_hilight_rect2", do.call("grobTree", polys))
@@ -319,6 +304,12 @@ check_linewidth <- function(data, name) {
 snake_class <- getFromNamespace('snake_class', 'ggplot2')
 snakeize <- getFromNamespace('snakeize', 'ggplot2')
 
+#' @title ggproto classes of ggtree
+#' @description
+#' ggproto classes of ggtree
+#' @format NULL
+#' @usage NULL
+#' @export
 GeomHilightEncircle <- ggproto("GeomHilightEncircle", Geom,
                                 required_aes = c("x", "y", "clade_root_node"),
                                 default_aes = aes(colour="black", fill="steelblue", alpha = 0.5,
@@ -655,3 +646,101 @@ rect_to_poly <- function(xmin, xmax, ymin, ymax) {
     x = c(xmin, xmax, xmax, xmin, xmin)
   )
 }
+
+# the internal functions of ggiraph
+layer_interactive <- getFromNamespace("layer_interactive", "ggiraph")
+add_default_interactive_aes <- getFromNamespace("add_default_interactive_aes", "ggiraph")
+interactive_geom_parameters <- getFromNamespace("interactive_geom_parameters", "ggiraph")
+interactive_geom_draw_key <- getFromNamespace("interactive_geom_draw_key", "ggiraph")
+IPAR_NAMES <- getFromNamespace("IPAR_NAMES", "ggiraph")
+add_interactive_attrs <- getFromNamespace("add_interactive_attrs", "ggiraph")
+
+
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggplot2 ggproto
+#' @importFrom grid gTree gpar curveGrob grobTree
+#' @importFrom cli cli_alert_warning
+#' @importFrom ggiraph GeomInteractivePolygon
+#' @export
+GeomInteractiveHilightRect <- ggproto(
+  "GeomInteractiveHilightRect",
+  GeomHilightRect,
+  default_aes = add_default_interactive_aes(GeomHilightRect),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, panel_params, coord, align='none',
+                        gradient = FALSE, roundrect = FALSE, ...,
+                        .ipar = IPAR_NAMES){
+     if (!.check_ipar_params(data)){
+        return(GeomHilightRect$draw_panel(data = data,
+                                          panel_params = panel_params,
+                                          coord = coord,
+                                          align = align,
+                                          gradient = gradient,
+                                          roundrect = roundrect,
+                                          ...
+                        )
+
+        )
+     }
+     if (coord$is_linear()){
+        gr <- GeomHilightRect$draw_panel(data, panel_params, coord, gradient = gradient, roundrect = roundrect, align = align, ...)
+        coords <- coord$transform(data, panel_params)
+        gr <- add_interactive_attrs(gr, coords, ipar=.ipar)
+     }else{
+        data <- GeomHilightRect$make_hilight_data(data, align)
+        if (gradient){
+            cli_alert_warning("The gradient color hight light layer only presents in
+                              rectangular, ellipse, roundrect layouts.", wrap = TRUE)
+        }
+        if (roundrect){
+            cli_alert_warning("The round rectangular hight light layer only presents in
+                              rectangular, ellipse, roundrect layouts.", wrap =TRUE)
+        }
+        aesthetics <- setdiff(colnames(data), c("xmin", "xmax", "ymin", "ymax", "clade_root_node"))
+        gr <- lapply(split(data, seq_len(nrow(data))), function(row) {
+                      poly <- rect_to_poly(row$xmin, row$xmax, row$ymin, row$ymax)
+                      aes <- row[rep(1,5), aesthetics]
+                      GeomInteractivePolygon$draw_panel(vctrs::vec_cbind(poly, aes), panel_params, coord, ..., .ipar=.ipar)
+                      })
+        gr <- ggname("geom_hilight_rect2_interactive", do.call("grobTree", gr))
+     }
+     gr
+  }
+)
+
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @export
+GeomInteractiveHilightEncircle <- ggproto(
+  "GeomInteractiveHilightEncircle",
+  GeomHilightEncircle,
+  default_aes = add_default_interactive_aes(GeomHilightEncircle),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(self, data, panel_scales, coord, .ipar = IPAR_NAMES){
+      if (!.check_ipar_params(data)){
+         return(GeomHilightEncircle$draw_panel(data = data,
+                                               panel_scales = panel_scales,
+                                               coord = coord
+                                               )
+         )
+      }
+      data <- check_linewidth(data, snake_class(self))
+      globs <- lapply(split(data, data$clade_root_node), function(i){
+                      encircle <- get_glob_encircle(i, panel_scales, coord)
+                      index <- duplicated(i[,!names(i) %in% c("x", "y")])
+                      add_interactive_attrs(encircle, i[!index,,drop=FALSE], ipar=.ipar)
+         }
+      )      
+      ggname("geom_hilight_encircle2_interactive", do.call("grobTree", globs)) 
+  }
+)
+

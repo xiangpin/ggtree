@@ -22,9 +22,9 @@ sticker:
 	rm Rplots.pdf
 
 build:
-	cd ..;\
-	R CMD build $(PKGSRC)
-	#Rscript -e 'devtools::build()'
+	#cd ..;\
+	#R CMD build $(PKGSRC)
+	Rscript -e 'devtools::build()'
 
 build2:
 	cd ..;\
@@ -36,8 +36,8 @@ install:
 
 check: rd 
 	cd ..;\
-	Rscript -e "rcmdcheck::rcmdcheck('$(PKGNAME)_$(PKGVERS).tar.gz')"
-	#Rscript -e 'devtools::check()'
+	#Rscript -e "rcmdcheck::rcmdcheck('$(PKGNAME)_$(PKGVERS).tar.gz')"
+	Rscript -e 'devtools::check()'
 	
 check-dontrun: build
 	cd ..;\

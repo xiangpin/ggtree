@@ -36,20 +36,22 @@ check_reverse <- function(data){
 
 choose_hilight_layer <- function(object, type){
     if (type=="encircle"){
+        default_aes1 <- aes(x=!!sym("x"), y=!!sym("y"), clade_root_node=!!sym("clade_root_node"))
         if (!is.null(object$mapping)){
-            object$mapping <- modifyList(object$mapping, aes_(x=~x, y=~y, clade_root_node=~clade_root_node))
+            object$mapping <- modifyList(object$mapping, default_aes1)
         }else{
-            object$mapping <- aes_(x=~x, y=~y, clade_root_node=~clade_root_node)
+            object$mapping <- default_aes1
         }
         params <- c(list(data=object$data, mapping=object$mapping), object$params)
-        ly <- do.call("geom_hilight_encircle2", params)
+        ly <- do.call("geom_hilight_encircle2_interactive", params)
     }else{
+        default_aes2 <- aes(xmin=!!sym("xmin"), xmax=!!sym("xmax"), 
+                            ymin=!!sym("ymin"), ymax=!!sym("ymax"), 
+                            clade_root_node=!!sym("clade_root_node"))
         if (!is.null(object$mapping)){
-            object$mapping <- modifyList(object$mapping, aes_(xmin=~xmin, xmax=~xmax, 
-                                                              ymin=~ymin, ymax=~ymax, 
-                                                              clade_root_node=~clade_root_node))
+            object$mapping <- modifyList(object$mapping, default_aes2)
         }else{
-            object$mapping <- aes_(xmin=~xmin, xmax=~xmax, ymin=~ymin, ymax=~ymax, clade_root_node=~clade_root_node)
+            object$mapping <- default_aes2
         }
         params <- c(list(data=object$data, mapping=object$mapping), object$params)
         if (type == "gradient"){
@@ -60,21 +62,22 @@ choose_hilight_layer <- function(object, type){
             params$gradient <- FALSE
             params$roundrect <- TRUE
         }
-        ly <- do.call("geom_hilight_rect2", params)
+        ly <- do.call("geom_hilight_rect2_interactive", params)
     }
     return (ly)
 }
 
-extract_all_aes_var <- function(mapping, rmvar=c("node", "subset")){
+extract_all_aes_var <- function(mapping, rmvar=c(c("node", "subset"), IPAR_NAMES)){
     unlist(lapply(names(mapping)[!names(mapping) %in% rmvar], 
                   function(i) get_aes_var(mapping, i)))
 }
 
+#' @importFrom rlang quo
 remapping <- function(mapping, samevars){
     allvars <- extract_all_aes_var(mapping, rmvar=NULL)
     samevars <- allvars[allvars %in% samevars]
-    tmpmap <- lapply(samevars, function(i) paste0(i, ".x"))
-    tmpmap <- do.call("aes_string", tmpmap)
+    tmpmap <- lapply(samevars, function(i) quo(!!sym(paste0(i, ".x"))))
+    tmpmap <- do.call("aes", tmpmap)
     names(tmpmap) <- names(mapping)[allvars %in% samevars]
     mapping <- modifyList(mapping, tmpmap)
     return(mapping)
@@ -258,7 +261,7 @@ reset_params <- function(defaultp, inputp, type){
     setd <- defaultp[match(setd, names(defaultp))]
     newp <- c(intdi, setd)
     if (type=="bar"){
-        names(newp)[grepl("barsize",names(newp))] <- "size"
+        names(newp)[grepl("barsize",names(newp))] <- "linewidth"
         names(newp)[grepl("barcolour", names(newp))] <- "colour"
     }else if (type=="text"){
         names(newp)[grepl("fontsize", names(newp))] <- "size"
@@ -337,8 +340,10 @@ build_image_layer <- function(data, object, params){
     image_obj <- list()
     check_installed('ggimage', "for `geom_cladelab()` or `geom_striplab()` with geom='image' or geom='phylopic'.")
     label_geom <- switch(object$geom,
-                        image=get_fun_from_pkg("ggimage", "geom_image"),
-                        phylopic=get_fun_from_pkg("ggimage", "geom_phylopic")
+                        # image = geom_image_interactive,
+                        # phylopic = geom_phylopic_interactive
+                        image=get_fun_from_pkg("ggimage", "geom_image_interactive"),
+                        phylopic=get_fun_from_pkg("ggimage", "geom_phylopic_interactive")
                         )
     image_obj$data <- data
     image_default_aes <- list(image=NULL,imagesize=0.05, imagecolour=NULL, imagecolor=NULL,
@@ -348,8 +353,8 @@ build_image_layer <- function(data, object, params){
     image_obj$mapping <- reset_mapping(defaultm=image_default_aes,
                                       inputm=object$mapping)
     ifelse(is.null(image_obj$mapping), 
-           image_obj$mapping <- aes_(x=~x, y=~y),
-           image_obj$mapping <- modifyList(image_obj$mapping, aes_(x=~x, y=~y)))
+           image_obj$mapping <- aes(x=!!sym("x"), y=!!sym("y")),
+           image_obj$mapping <- modifyList(image_obj$mapping, aes(x=!!sym("x"), y=!!sym("y"))))
     image_dot_params <- reset_dot_params(mapping=image_obj$mapping,
                                          defaultp=params,
                                          default_aes=image_default_aes,
@@ -359,12 +364,16 @@ build_image_layer <- function(data, object, params){
     return(image_obj)
 }
 
+IPAR_DEFAULTS <- getFromNamespace("IPAR_DEFAULTS", "ggiraph")
+IPAR_NAMES <- names(IPAR_DEFAULTS)
+
 build_text_layer <- function(data, object, params, layout){
     text_obj <- list()
     text_obj$data <- data
     if (object$geom=="shadowtext"){
         check_installed('shadowtext', "for `geom_cladelab()` or `geom_striplab()` with geom='shadowtext'.")
-        label_geom <- get_fun_from_pkg("shadowtext", "geom_shadowtext")
+        label_geom <- get_fun_from_pkg("shadowtext", "geom_shadowtext_interactive")
+        #label_geom <- geom_shadowtext_interactive
     }
     text_default_aes <- list(textcolour="white", textcolor="white", textsize=3.88, 
                              fontsize=3.88, fontcolor="white", fontcolour="white", 
@@ -372,6 +381,8 @@ build_text_layer <- function(data, object, params, layout){
                              alpha=NA, family="", fontface=1, lineheight=1.2, inherit.aes=FALSE,
                              nudge_x=0, nudge_y=0, check_overlap=FALSE, show.legend=NA, na.rm=FALSE,
                              stat="identity", position="identity")
+    text_default_aes <- c(text_default_aes, IPAR_DEFAULTS)
+
     shadowtext_default_aes <- c(text_default_aes, list(bg.colour="black", bg.r=0.1))
     label_default_aes <- c(text_default_aes, list(fill="white", label.padding = unit(0.25, "lines"),
                                                   label.r = unit(0.15, "lines"), label.size = 0.25))
@@ -381,9 +392,9 @@ build_text_layer <- function(data, object, params, layout){
                               shadowtext=reset_mapping(defaultm=shadowtext_default_aes, inputm=object$mapping)
                               )
     if(length(text_obj$mapping)==0){
-        text_obj$mapping <- aes_(x=~x, y=~y, label=~label, angle=~angle)
+        text_obj$mapping <- aes(x=!!sym("x"), y=!!sym("y"), label=!!sym("label"), angle=!!sym("angle"))
     }else{
-        text_obj$mapping <- modifyList(text_obj$mapping, aes_(x=~x, y=~y, label=~label, angle=~angle))
+        text_obj$mapping <- modifyList(text_obj$mapping, aes(x=!!sym("x"), y=!!sym("y"), label=!!sym("label"), angle=!!sym("angle")))
     }
     text_dot_params <- switch(object$geom,
                              text= reset_dot_params(mapping=text_obj$mapping,
@@ -412,22 +423,22 @@ build_text_layer <- function(data, object, params, layout){
     if (object$geom == "text"){
         if (layout %in% c("circular", "radial", "daylight", "fan", "unrooted", "ape", "inward_circular", "equal_angle") && 
             (is.null(object$params$horizontal) || object$params$horizontal)){
-            m1 <- aes_string(subset="(angle < 90 | angle > 270)", angle="angle")
-            m2 <- aes_string(subset="(angle >= 90 & angle <=270)", angle="angle+180")
+            m1 <- aes(subset=.data[["angle"]] < 90 | .data[["angle"]] > 270, angle=.data[["angle"]])
+            m2 <- aes(subset=.data[["angle"]] >= 90 & .data[["angle"]] <=270, angle=.data[["angle"]]+180)
             m1 <- modifyList(text_obj$mapping, m1)
             m2 <- modifyList(text_obj$mapping, m2)
             text_obj1 <- text_obj2 <- text_obj
             text_obj1$mapping <- m1
             text_obj2$mapping <- m2
             text_obj2$hjust <- 1
-            textlayer <- list(do.call("geom_text2", text_obj1), do.call("geom_text2", text_obj2))
+            textlayer <- list(do.call("geom_text2_interactive", text_obj1), do.call("geom_text2_interactive", text_obj2))
         }else{
-            textlayer <- do.call("geom_text", text_obj)
+            textlayer <- do.call("geom_text2_interactive", text_obj)
         }
     }
     text_obj <- switch(object$geom,
                        text = textlayer, #do.call("geom_text", text_obj),
-                       label = do.call("geom_label", text_obj),
+                       label = do.call("geom_label2_interactive", text_obj),
                        shadowtext = do.call("label_geom", text_obj)
                       )
     return(text_obj)

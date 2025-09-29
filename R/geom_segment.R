@@ -19,7 +19,7 @@ geom_aline <- function(mapping=NULL, linetype="dotted", linewidth = 1, ...) {
         dot_mapping <- modifyList(dot_mapping, mapping)
     }
 
-    geom_segment2(dot_mapping,
+    geom_segment2_interactive(dot_mapping,
                   linetype=linetype,
                   linewidth = linewidth, stat = StatTreeData, ...)
 }
@@ -56,7 +56,7 @@ geom_segment2 <- function(mapping = NULL, data = NULL, stat = "identity",
                          nudge_x = 0, arrow = NULL, arrow.fill = NULL,
                          ...) {
 
-    default_aes <- aes_(node=~node)
+    default_aes <- aes(node=!!sym("node"))
     if (is.null(mapping)) {
         mapping <- default_aes
     } else {
@@ -81,7 +81,6 @@ geom_segment2 <- function(mapping = NULL, data = NULL, stat = "identity",
         check.aes = FALSE
     )
 }
-
 
 ##' @importFrom ggplot2 GeomSegment
 ##' @importFrom ggplot2 draw_key_path
@@ -126,14 +125,33 @@ GeomSegmentGGtree <- ggproto("GeomSegmentGGtree", GeomSegment,
                                                            lwd = data$linewidth * ggplot2::.pt, lty = data$linetype,
                                                            lineend = lineend, linejoin = linejoin), arrow = arrow)
                                        )
-
-
-                                 ## data$x <- data$x - sapply(data$label, function(x) convertWidth(grobWidth(textGrob(x, gp=gpar(fontsize=.04* .pt))), "native", TRUE))
-                                 ##GeomSegment$draw_panel(data = data, panel_params = panel_params, coord = coord,
-                                 ##                       arrow = arrow, arrow.fill = arrow.fill,
-                                 ##                       lineend = lineend, linejoin = linejoin, na.rm = na.rm)
                              }
                              )
+
+
+#' @title ggproto classes for ggiraph
+#' @description
+#' ggproto classes for ggiraph
+#' @format NULL
+#' @usage NULL
+#' @importFrom ggiraph GeomInteractiveSegment
+#' @importFrom ggplot2 ggproto
+#' @export
+GeomInteractiveSegmentGGtree <- ggproto(
+  "GeomInteractiveSegmentGGtree",
+  GeomSegmentGGtree,
+  default_aes = add_default_interactive_aes(GeomSegmentGGtree),
+  parameters = interactive_geom_parameters,
+  draw_key = interactive_geom_draw_key,
+  draw_panel = function(data, ..., nudge_x = 0, .ipar = IPAR_NAMES){
+      if (.check_ipar_params(data)){
+        data$x <- data$x + nudge_x
+        GeomInteractiveSegment$draw_panel(data, ..., .ipar = .ipar)
+      }else{
+        GeomSegmentGGtree$draw_panel(data, nudge_x = nudge_x, ...)
+      }
+  }
+)
 
 
 is_waiver <- function(x){

@@ -51,9 +51,9 @@
 #' 
 geom_rootedge <- function(rootedge = NULL, ...) {
     # add isTip for checking whether the x of tree is reversed.
-    mapping <- aes_(x = ~x, y = ~y, xend = ~x, yend = ~y,
-                    branch.length = ~branch.length,
-                    node = ~node, parent = ~parent, isTip=~isTip)
+    mapping <- aes(x = !!sym("x"), y = !!sym("y"), xend = !!sym("x"), yend = !!sym("y"),
+                    branch.length = !!sym("branch.length"),
+                    node = !!sym("node"), parent = !!sym("parent"), isTip=!!sym("isTip"))
     layer(
         stat = StatRootEdge,
         data  = NULL,

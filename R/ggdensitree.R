@@ -144,7 +144,7 @@ ggdensitree <- function(data=NULL, mapping=NULL, layout="slanted", tip.order='mo
 	## plot all trees together
 	p <- ggtree(tr=trees.f[[1]], mapping=mapping, layout=layout, ...)
 	for (x in trees.f[-1])
-		p <- p + geom_tree(mapping=mapping, data=x, layout=layout, ...)
+		p <- p + geom_tree(data=x, layout = layout, ...)
 	p
 }
 
