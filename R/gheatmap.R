@@ -104,8 +104,8 @@ gheatmap <- function(p, data, offset=0, width=1, low="green", high="red", color=
         dd$variable <- factor(dd$variable, levels=colnames_level)
     }
     V2 <- start + as.numeric(dd$variable) * width
-    mapping <- data.frame(from=dd$variable, to=V2)
-    mapping <- unique(mapping)
+    data_lab <- data.frame(from=dd$variable, to=V2)
+    data_lab <- unique(data_lab)
 
     dd$x <- V2
     dd$width <- width
@@ -127,25 +127,25 @@ gheatmap <- function(p, data, offset=0, width=1, low="green", high="red", color=
         } else {
             y <- max(p$data$y) + 1
         }
-        mapping$y <- y
-        mapping[[".panel"]] <- factor("Tree")
+        data_lab$y <- y
+        data_lab[[".panel"]] <- factor("Tree")
         # if custom column annotations are provided
         if (!is.null(custom_column_labels)) {
             # assess the type of input for the custom column annotation
             # either a vector or a named vector with positions for specific names
             if (is.null(names(custom_column_labels))) {
-                if (length(custom_column_labels) > nrow(mapping)) {
+                if (length(custom_column_labels) > nrow(data_lab)) {
                     warning(paste("Input column label vector has more elements than there are columns.",
-                                  "\n", "Using the first ", nrow(mapping)," elements as labels", sep=""))
-                    mapping[["custom_labels"]] <- as.character(custom_column_labels[1:nrow(mapping)])
-                 } else if (length(custom_column_labels) < nrow(mapping)) {
+                                  "\n", "Using the first ", nrow(data_lab)," elements as labels", sep=""))
+                    data_lab[["custom_labels"]] <- as.character(custom_column_labels[1:nrow(data_lab)])
+                 } else if (length(custom_column_labels) < nrow(data_lab)) {
                         warning(paste("Input column label vector has fewer elements than there are columns.",
                                    "\n", "Using all available labels, n = ",
                                    length(custom_column_labels), sep=""))
-                        mapping[["custom_labels"]] <- as.character(c(custom_column_labels,
-                                rep("", nrow(mapping) - length(custom_column_labels))))
+                        data_lab[["custom_labels"]] <- as.character(c(custom_column_labels,
+                                rep("", nrow(data_lab) - length(custom_column_labels))))
                  } else {
-                     mapping[["custom_labels"]] <- custom_column_labels
+                     data_lab[["custom_labels"]] <- custom_column_labels
                     }
             } else {
                 if (!is.null(colnames_level)) {
@@ -154,18 +154,18 @@ gheatmap <- function(p, data, offset=0, width=1, low="green", high="red", color=
                     vector_order <- colnames_level
                     
                 } else {
-                    vector_order <- as.character(mapping$from)
+                    vector_order <- as.character(data_lab$from)
                 }
                 for (elem in custom_column_labels) {
                     vector_order[which(vector_order == elem)] = names(which(custom_column_labels == elem))
                 }
-                mapping[["custom_labels"]] <- vector_order
+                data_lab[["custom_labels"]] <- vector_order
                 }
-            p2 <- p2 + geom_text(data=mapping, aes(x=to, y = y, label=custom_labels),
+            p2 <- p2 + geom_text(data=data_lab, mapping = aes(x=to, y = y, label=custom_labels),
                                  size=font.size, family=family, inherit.aes = FALSE, angle=colnames_angle,
                                  nudge_x=colnames_offset_x, nudge_y = colnames_offset_y, hjust=hjust)
         } else {
-            p2 <- p2 + geom_text(data=mapping, aes(x=to, y = y, label=from), size=font.size, family=family,
+            p2 <- p2 + geom_text(data=data_lab, mapping = aes(x=to, y = y, label=from), size=font.size, family=family,
                                  inherit.aes = FALSE, angle=colnames_angle,
                                  nudge_x=colnames_offset_x, nudge_y = colnames_offset_y, hjust=hjust)
         }
@@ -178,7 +178,7 @@ gheatmap <- function(p, data, offset=0, width=1, low="green", high="red", color=
         p2 <- p2 + scale_y_continuous(expand = c(0,0))
     }
 
-    attr(p2, "mapping") <- mapping
+    attr(p2, "data_label") <- data_lab
     return(p2)
 }
 
